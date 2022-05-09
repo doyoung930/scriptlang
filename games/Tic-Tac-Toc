@@ -1,6 +1,6 @@
 #tic-tac-toe.py
 ###
-### 제가 알고리즘 짜다가 좀 망해서 일단은 여기서 부터 좀 어렵네요
+### 
 ###
 from tkinter import*
 import tkinter.font
@@ -53,7 +53,6 @@ def game_board():
                 n = j
                 button [i].append(j)
                 # 추가 : 보드의 값에 따라 이미지 변경
-                # 주석 : bd가 바깥 표면의 두께를 뜻하던데, 이미지 넣으니까 좀 이상하긴 해 -> 변경할거면 변경
                 if(board[i][j] == 0):
                     button[i][j] = Button(root, image = i_empty ,  height = 90, width = 90, command=partial(change_button, i, j))   # 파라메터를 넘겨주기 위해 partial 사용
                 elif(board[i][j] == 1):
