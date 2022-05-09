@@ -1,5 +1,6 @@
 #tic-tac-toe.py
-
+###
+### 제가 알고리즘 짜다가 좀 망해서 일단은 여기서 부터 좀 어렵네요
 ###
 from tkinter import*
 import tkinter.font
@@ -7,11 +8,11 @@ import tkinter.font
 from functools import partial
 import tkinter
 
-
+# 순서를 표시하는 전역함수. main에 있으면 계속 초기화되서 전역변수로 뺐음.
 # 1 = o 차례, 2 = x 차례
 turn = 1
 
-
+# [도] 그림을 바꾸려면 game_board를 계속 불러야하는데, 함수 안에 있으면 초기화 돼서 전역변수로 만들었음.
 button = []
     # 3 x 3 버튼에 따라 숫자를 변경시킬 이중 포문
     # 추가 : 보드에 값을 매겨 값에 따라 이미지가 바뀌도록 함
@@ -45,14 +46,14 @@ def game_board():
     # 3 x 3 button을 그리는 포문
     if(isPlayGame):
         for i in range(3):
-            m = 3+i              
+            m = i                
             button.append(i)
             button[i] = []
             for j in range(3):
                 n = j
                 button [i].append(j)
                 # 추가 : 보드의 값에 따라 이미지 변경
-               
+                # 주석 : bd가 바깥 표면의 두께를 뜻하던데, 이미지 넣으니까 좀 이상하긴 해 -> 변경할거면 변경
                 if(board[i][j] == 0):
                     button[i][j] = Button(root, image = i_empty ,  height = 90, width = 90, command=partial(change_button, i, j))   # 파라메터를 넘겨주기 위해 partial 사용
                 elif(board[i][j] == 1):
@@ -60,7 +61,16 @@ def game_board():
                 elif(board[i][j] == 2):
                     button[i][j] = Button(root, image = i_x , height = 90, width = 90)
                 button[i][j].grid(row=m, column=n)
+        if(turn == 1):
+            win_text = tkinter.Label(root, text = "o 차례", font = font)
+            win_text.place( x=90, y = 295)
+        else:
+            win_text = tkinter.Label(root, text = "x 차례", font = font)
+            win_text.place( x=90, y = 295)
+
     if(winner()):
+        win_text = tkinter.Label(root, text = "      ", font = font)
+        win_text.place( x=90, y = 295)
         print("게임이 끝났습니다.")
         isPlayGame = False
         if(turn == 1):
