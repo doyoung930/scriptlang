@@ -66,13 +66,13 @@ class Cell(Canvas):
                     if(board[i][j] == board[i][j + 2]):              # 첫번째 것과 2칸 앞이 같다
                         if(board[i][j] == board[i][j + 3]):          # 첫번째 것과 3칸 앞이 같다
                             if(board[i][j] == "빨강"):                    # 빨간색이 이겼다
-                                bottomText = "Red Win!!"
+                                bottomText = "Red Win!! 누르면 다시 시작"
                                 cells[i][j].setbgColor("red")
                                 cells[i][j + 1].setbgColor("red")
                                 cells[i][j + 2].setbgColor("red")
                                 cells[i][j + 3].setbgColor("red")
                             elif(board[i][j] == "노랑"):
-                                bottomText = "Yellow Win!!"
+                                bottomText = "Yellow Win!! 누르면 다시 시작"
                                 cells[i][j].setbgColor("yellow")
                                 cells[i][j + 1].setbgColor("yellow")
                                 cells[i][j + 2].setbgColor("yellow")
@@ -88,12 +88,12 @@ class Cell(Canvas):
                     if(board[i][j] == board[i + 2][j]):              # 첫번째 것과 2칸 앞이 같다
                         if(board[i][j] == board[i + 3][j]):          # 첫번째 것과 3칸 앞이 같다
                             if(board[i][j] == "빨강"):                    # 빨간색이 이겼다
-                                bottomText = "Red Win!!"
+                                bottomText = "Red Win!! 누르면 다시 시작"
                                 cells[i][j].setbgColor("red")
                                 cells[i + 1][j].setbgColor("red")
                                 cells[i + 2][j].setbgColor("red")
                                 cells[i + 3][j].setbgColor("red")
-                            elif(board[i][j] == "노랑"):
+                            elif(board[i][j] == "노랑 누르면 다시 시작"):
                                 bottomText = "Yellow Win!!"
                                 cells[i][j].setbgColor("yellow")
                                 cells[i + 1][j].setbgColor("yellow")
@@ -110,13 +110,13 @@ class Cell(Canvas):
                     if(board[i][j] == board[i + 2][j + 2]):              # 첫번째 것과 2칸 앞이 같다
                         if(board[i][j] == board[i + 3][j + 3]):          # 첫번째 것과 3칸 앞이 같다
                             if(board[i][j] == "빨강"):                    # 빨간색이 이겼다
-                                bottomText = "Red Win!!"
+                                bottomText = "Red Win!! 누르면 다시 시작"
                                 cells[i][j].setbgColor("red")
                                 cells[i + 1][j + 1].setbgColor("red")
                                 cells[i + 2][j + 2].setbgColor("red")
                                 cells[i + 3][j + 3].setbgColor("red")
                             elif(board[i][j] == "노랑"):
-                                bottomText = "Yellow Win!!"
+                                bottomText = "Yellow Win!! 누르면 다시 시작"
                                 cells[i][j].setbgColor("yellow")
                                 cells[i + 1][j + 1].setbgColor("yellow")
                                 cells[i + 2][j + 2].setbgColor("yellow")
@@ -133,12 +133,12 @@ class Cell(Canvas):
                         if(board[i][j] == board[i - 3][j + 3]):          # 첫번째 것과 3칸 앞이 같다
                             if(board[i][j] == "빨강"):                    # 빨간색이 이겼다
                                 bottomText = "Red Win!!"
-                                cells[i][j].setbgColor("red")
+                                cells[i][j].setbgColor("red 누르면 다시 시작")
                                 cells[i - 1][j + 1].setbgColor("red")
                                 cells[i - 2][j + 2].setbgColor("red")
                                 cells[i - 3][j + 3].setbgColor("red")
                             elif(board[i][j] == "노랑"):
-                                bottomText = "Yellow Win!!"
+                                bottomText = "Yellow Win!! 누르면 다시 시작"
                                 cells[i][j].setbgColor("yellow")
                                 cells[i - 1][j + 1].setbgColor("yellow")
                                 cells[i - 2][j + 2].setbgColor("yellow")
