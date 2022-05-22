@@ -4,13 +4,13 @@ from random import randint
     
 class Hangman:
     hiddenWord, guessWord, nMissedLetters = [], [], []    # 파일에서 찾은 단어, 맞추고 있는 단어, 틀린 단어 리스트
-    nCorrectChar, nMissChar = 0, 7                          # 맞춘 개수, 틀린 개수
+    nCorrectChar, nMissChar = 0, 0                          # 맞춘 개수, 틀린 개수
     finished = 0                                            # 0 = 아직 안 끝남, 1 = 맞춤, 2 = 틀림
 
     def __init__(self, words):
         self.hiddenWord = words
         self.guessWord = ['*' for _ in range(len(self.hiddenWord))]        # word의 길이 만큼 * 문자 채우기, draw에서는 guessWord를 보일거임.
-        #print(self.hiddenWord)
+        print(self.hiddenWord)
         #print(self.guessWord)
         self.draw()
 
@@ -78,7 +78,15 @@ class Hangman:
         pass
 
     def guess(self, letter):                                        # 사용자가 입력한 글자를 반영
-        self.draw()
+        self.corret = False                                         # 함수에 들어왔을 때, 한 번이라도 맞췄는가?의 대한 불 함수를 False로 초기화.
+        for i in range(len(self.hiddenWord)):
+            if(self.hiddenWord[i] == letter):                       # 만약에 같은걸 하나라도 찾는다
+                self.guessWord[i] = letter                          # 그 위치의 guessWord를 바꾸고
+                self.corret = True                                  # 불 함수 True
+        if(not self.corret):                                        # 만약 하나도 못 찾았다
+            self.nMissChar += 1                                     # 틀린 개수 증가
+
+        self.draw()                                                 # 그림 다시 그리기
         
 # Initialize words, get the words from a file
 infile = open("hangman.txt", "r")
