@@ -4,7 +4,7 @@ from random import randint
     
 class Hangman:
     hiddenWord, guessWord, nMissedLetters = [], [], []    # 파일에서 찾은 단어, 맞추고 있는 단어, 틀린 단어 리스트
-    nCorrectChar, nMissChar = 0, 0                          # 맞춘 개수, 틀린 개수
+    nCorrectChar, nMissChar = 0, 7                          # 맞춘 개수, 틀린 개수
     finished = 0                                            # 0 = 아직 안 끝남, 1 = 맞춤, 2 = 틀림
 
     def __init__(self, words):
@@ -22,8 +22,9 @@ class Hangman:
         canvas.create_line(60, 200, 60, 20, tags = "hangman")  # Draw the pole
         canvas.create_line(60, 20, 160, 20, tags = "hangman") # Draw the hanger
         
+        radius = 20 # 반지름
+        
         if(self.nMissChar >= 1):                                    # 줄
-            radius = 20 # 반지름
             canvas.create_line(160, 20, 160, 40, tags = "hangman")  # Draw the hanger
 
         if(self.nMissChar >= 2):                                    # 머리
@@ -40,16 +41,36 @@ class Hangman:
             canvas.create_line(x1, y1, x2, y2, tags = "hangman")
         
         if(self.nMissChar >= 4):                                    # 오른팔
-            pass
+            x3 = 160 + radius * math.cos(math.radians(45))
+            y3 = 60 + radius * math.sin(math.radians(45))
+            x4 = 160 + (radius+60) * math.cos(math.radians(45))
+            y4 = 60 + (radius+60) * math.sin(math.radians(45))
+
+            canvas.create_line(x3, y3, x4, y4, tags = "hangman")
 
         if(self.nMissChar >= 5):                                    # 몸통
-            pass
+            x5 = 160
+            y5 = 60 + radius
+            x6 = 160
+            y6 = 60 + radius + 60
+
+            canvas.create_line(x5, y5, x6, y6, tags = "hangman")
 
         if(self.nMissChar >= 6):                                    # 왼쪽 다리
-            pass
+            x7 = 160
+            y7 = 60 + radius + 60
+            x8 = 160 - (radius+60) * math.cos(math.radians(45))
+            y8 = 60 + (radius+60) * math.sin(math.radians(45)) + 60
+
+            canvas.create_line(x7, y7, x8, y8, tags = "hangman")
 
         if(self.nMissChar >= 7):                                    # 오른 다리
-            pass
+            x9 = 160
+            y9 = 60 + radius + 60
+            x10 = 160 + (radius+60) * math.cos(math.radians(45))
+            y10 = 60 + (radius+60) * math.sin(math.radians(45)) + 60
+
+            canvas.create_line(x9, y9, x10, y10, tags = "hangman")
     
     def setWord(self):                                              # 새로운 단어를 선택하고 게임 (재)시작
         pass
