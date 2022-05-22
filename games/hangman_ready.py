@@ -22,15 +22,15 @@ class Hangman:
         canvas.create_line(60, 200, 60, 20, tags = "hangman")  # Draw the pole
         canvas.create_line(60, 20, 160, 20, tags = "hangman") # Draw the hanger
         
-        if(self.nMissChar >= 1):
+        if(self.nMissChar >= 1):                                    # 줄
             radius = 20 # 반지름
-            canvas.create_line(160, 20, 160, 40, tags = "hangman") # Draw the hanger
+            canvas.create_line(160, 20, 160, 40, tags = "hangman")  # Draw the hanger
 
-        if(self.nMissChar >= 2):
+        if(self.nMissChar >= 2):                                    # 머리
         # Draw the circle
-            canvas.create_oval(140, 40, 180, 80, tags = "hangman") # Draw the hanger
+            canvas.create_oval(140, 40, 180, 80, tags = "hangman")  # Draw the hanger
 
-        if(self.nMissChar >= 3):
+        if(self.nMissChar >= 3):                                    # 왼쪽 팔
         # Draw the left arm (중심(160,60)에서 45도 움직인 지점의 x좌표는 cos로, y좌표는 sin으로 얻기)
             x1 = 160 - radius * math.cos(math.radians(45))
             y1 = 60 + radius * math.sin(math.radians(45))
@@ -38,11 +38,23 @@ class Hangman:
             y2 = 60 + (radius+60) * math.sin(math.radians(45))
 
             canvas.create_line(x1, y1, x2, y2, tags = "hangman")
+        
+        if(self.nMissChar >= 4):                                    # 오른팔
+            pass
+
+        if(self.nMissChar >= 5):                                    # 몸통
+            pass
+
+        if(self.nMissChar >= 6):                                    # 왼쪽 다리
+            pass
+
+        if(self.nMissChar >= 7):                                    # 오른 다리
+            pass
     
-    def setWord(self):
+    def setWord(self):                                              # 새로운 단어를 선택하고 게임 (재)시작
         pass
 
-    def guess(self, letter):
+    def guess(self, letter):                                        # 사용자가 입력한 글자를 반영
         self.draw()
         
 # Initialize words, get the words from a file
@@ -56,9 +68,9 @@ window.title("행맨") # Set a title
 def processKeyEvent(event):  
     global hangman, word
 
-    if event.char >= 'a' and event.char <= 'z':
+    if event.char >= 'a' and event.char <= 'z':                     # a ~ z까지 입력한 것을 word에 저장
         word = event.char
-    elif event.keycode == 13:
+    elif event.keycode == 13:                                       # 엔터 입력 시, word에 저장된 값 전달
         hangman.guess(word)
     
 width = 400
@@ -67,9 +79,9 @@ height = 280
 canvas = Canvas(window, bg = "white", width = width, height = height)
 canvas.pack()
 
-random_number = randint(0, len(words) - 1)
+random_number = randint(0, len(words) - 1)                          # 읽어온 단어들 전체 중 하나를 랜덤하게 선택
 
-hangman = Hangman(words[random_number])
+hangman = Hangman(words[random_number])                             # 랜덤하게 선택한 단어로 클래스 생성
 
 # Bind with <Key> event
 canvas.bind("<Key>", processKeyEvent)
