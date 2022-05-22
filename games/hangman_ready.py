@@ -3,7 +3,7 @@ from tkinter import * # Import tkinter
 from random import randint
     
 class Hangman:
-    hiddenWord, guessWord, nMissedLetters = [], [], []    # 파일에서 찾은 단어, 맞추고 있는 단어, 틀린 단어 리스트
+    hiddenWord, guessWord, nMissedLetters = [], [], set()   # 파일에서 찾은 단어, 맞추고 있는 단어, 틀린 단어 set
     nCorrectChar, nMissChar = 0, 0                          # 맞춘 개수, 틀린 개수
     finished = 0                                            # 0 = 아직 안 끝남, 1 = 맞춤, 2 = 틀림
 
@@ -12,6 +12,7 @@ class Hangman:
         self.guessWord = ['*' for _ in range(len(self.hiddenWord))]        # word의 길이 만큼 * 문자 채우기, draw에서는 guessWord를 보일거임.
         print(self.hiddenWord)
         #print(self.guessWord)
+        print(type(self.nMissedLetters))
         self.draw()
 
     def draw(self):
@@ -79,12 +80,22 @@ class Hangman:
 
     def guess(self, letter):                                        # 사용자가 입력한 글자를 반영
         self.corret = False                                         # 함수에 들어왔을 때, 한 번이라도 맞췄는가?의 대한 불 함수를 False로 초기화.
+        
+        if(letter in self.nMissedLetters):                          # 틀렸던 단어 set에 있나?
+            return                                                  # 있다면 하지마
+
         for i in range(len(self.hiddenWord)):
-            if(self.hiddenWord[i] == letter):                       # 만약에 같은걸 하나라도 찾는다
+            if(self.hiddenWord[i] == letter):                       # 만약 같은걸 하나라도 찾는다
                 self.guessWord[i] = letter                          # 그 위치의 guessWord를 바꾸고
                 self.corret = True                                  # 불 함수 True
+
+        if(self.corret):                                            # 만약 하나라도 찾았다면
+            self.nCorrectChar += 1                                  # 맞춘 개수를 하나 늘린다.
+
         if(not self.corret):                                        # 만약 하나도 못 찾았다
             self.nMissChar += 1                                     # 틀린 개수 증가
+            self.nMissedLetters.add(letter)                         # 틀린 문자 set에 letter 추가
+            #print(self.nMissedLetters)
 
         self.draw()                                                 # 그림 다시 그리기
         
@@ -120,3 +131,10 @@ canvas.bind("<Key>", processKeyEvent)
 canvas.focus_set()
 
 window.mainloop() # Create an event loop
+
+
+# 해야할 것
+# 1. 단어 추측 화면에 나오게 하기 -> draw에서 guessWord를 나타내면 될 듯?
+# 2. 게임 승패(다 맞추거나, 계속 틀려서 self.nMissChar == 7) 판단. self.finished = 1, 2로(1 = 승리, 2 = 패배, 0 = 진행중)
+# 2-1. 승리는 어떻게 따지는가? -> self.guess 함수에서 letter를 넣었을 때 self.hiddenWord == self.guessWord가 된다면 승리로 판단.
+# 3. 다시 시작 -> self.setWord를 건드리면 된다.
