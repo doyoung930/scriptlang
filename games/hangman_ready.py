@@ -9,7 +9,9 @@ class Hangman:
 
     def __init__(self, words):
         self.hiddenWord = words
-        # print(self.hiddenWord)
+        self.guessWord = ['*' for _ in range(len(self.hiddenWord))]        # word의 길이 만큼 * 문자 채우기, draw에서는 guessWord를 보일거임.
+        #print(self.hiddenWord)
+        #print(self.guessWord)
         self.draw()
 
     def draw(self):
