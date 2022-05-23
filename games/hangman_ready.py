@@ -133,7 +133,6 @@ class Hangman:
             if(not self.corret):                                        # 만약 하나도 못 찾았다
                 self.nMissChar += 1                                     # 틀린 개수 증가
                 self.nMissedLetters.add(letter)                         # 틀린 문자 set에 letter 추가
-            #print(self.nMissedLetters)
             self.draw()                                                 # 그림 다시 그리기
 
 def processKeyEvent(event):  
@@ -170,10 +169,3 @@ canvas.bind("<Key>", processKeyEvent)
 canvas.focus_set()
 
 window.mainloop() # Create an event loop
-
-
-# 해야할 것
-# 1. 단어 추측 화면에 나오게 하기 -> draw에서 guessWord를 나타내면 될 듯?
-# 2. 게임 승패(다 맞추거나, 계속 틀려서 self.nMissChar == 7) 판단. self.finished = 1, 2로(1 = 승리, 2 = 패배, 0 = 진행중)
-# 2-1. 승리는 어떻게 따지는가? -> self.guess 함수에서 letter를 넣었을 때 self.hiddenWord == self.guessWord가 된다면 승리로 판단.
-# 3. 다시 시작 -> self.setWord를 건드리면 된다.
