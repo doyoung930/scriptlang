@@ -125,10 +125,12 @@ class Hangman:
             for i in range(len(self.hiddenWord)):
                 if(self.hiddenWord[i] == letter):                       # 만약 같은걸 하나라도 찾는다
                     self.guessWord[i] = letter                          # 그 위치의 guessWord를 바꾸고
+                    self.nCorrectChar+=1
                     self.corret = True                                  # 불 함수 True
 
             if(self.corret):                                            # 만약 하나라도 찾았다면
-                self.nCorrectChar += 1                                  # 맞춘 개수를 하나 늘린다.
+                pass                                                    # 맞춘 개수를 하나 늘린다.
+                                                                        # 공통단어가 들어갈수 잇으니 위로올림
 
             if(not self.corret):                                        # 만약 하나도 못 찾았다
                 self.nMissChar += 1                                     # 틀린 개수 증가
