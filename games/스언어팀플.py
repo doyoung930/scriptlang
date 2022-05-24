@@ -1,12 +1,20 @@
 ###
 ### 
 ###
+# xml
+from xml.etree.ElementTree import *
 from tkinter import*
 import tkinter.ttk as ttk
 import tkinter.font
 # Button에 패러매터를 주기 위한 모듈
 from functools import partial
 import tkinter
+###
+###
+###
+
+### XML
+
 
 
 ### 기본 gui 생성함수

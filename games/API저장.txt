@@ -1,0 +1,12 @@
+https://www.data.go.kr/data/15057597/openapi.do
+
+농구 배구 핸드볼
+https://www.data.go.kr/data/15058880/openapi.do
+
+축구
+
+https://www.data.go.kr/data/15057082/openapi.do
+수영장
+
+https://www.data.go.kr/data/15057427/openapi.do
+배드민턴 탁구 실내체육
