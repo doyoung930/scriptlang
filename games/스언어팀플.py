@@ -134,7 +134,11 @@ def Searchsport(sport):
         )
 
     #conn = http.client.HTTPSConnection(server)
+<<<<<<< HEAD
     elif(sport == "실내스포츠(배드민턴, 탁구)"):
+=======
+    elif(sport == "배드민턴" or sport == "탁구"):
+>>>>>>> 52e1e01e5cee6c026d3db8218bf49769a3a3a94c
         conn.request(
             "GET",
             "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
