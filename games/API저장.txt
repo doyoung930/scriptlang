@@ -1,12 +1,15 @@
 https://www.data.go.kr/data/15057597/openapi.do
-
+https://openapi.gg.go.kr/PublicLivelihood
 농구 배구 핸드볼
-https://www.data.go.kr/data/15058880/openapi.do
 
+https://www.data.go.kr/data/15058880/openapi.do
+https://openapi.gg.go.kr/PublicTrainingFacilitySoccer
 축구
 
 https://www.data.go.kr/data/15057082/openapi.do
+https://openapi.gg.go.kr/PublicSwimmingPool
 수영장
 
 https://www.data.go.kr/data/15057427/openapi.do
+https://openapi.gg.go.kr/PublicGameOfBallGymnasium
 배드민턴 탁구 실내체육
