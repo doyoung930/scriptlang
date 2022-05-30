@@ -8,6 +8,7 @@ from xml.dom.minidom import *
 import http.client
 import urllib.request
 from xml.dom.minidom import parseString
+from functools import partial
 
 #tk
 from tkinter import*
@@ -40,7 +41,7 @@ def program_gui():
     state_text.place( x= 20, y = 52)
 
     global sportscombo
-    sports_values = ["축구장", "농구장", "수영장", "배드민턴", "탁구", "선택안함"]
+    sports_values = ["축구장", "농구장", "수영장", "실내스포츠(배드민턴, 탁구)"]
     sportscombo = ttk.Combobox(root, values = sports_values)
     sportscombo.config(height=10,width = 25)
     sportscombo.config(state="readonly")
@@ -55,7 +56,7 @@ def program_gui():
     
     #검색 버튼
     global SearchButton
-    SearchButton = Button(font = state_font, text="검색", command=onSearch)
+    SearchButton = Button(font = state_font, text="검색", command=partial(onSearch, sportscombo))
     SearchButton.place(x= 540, y = 45)
 
     # 스포츠 센터 리스트 박스
@@ -82,17 +83,17 @@ def event_for_listbox(event):
         print(data)
 
 # 검색 버튼 상호작용 함수
-def onSearch():
+def onSearch(sports):
     global s_listbox
-    s_listbox.delete(1, s_listbox.size)
+    s_listbox.delete(0, s_listbox.size())
     
     sels = s_listbox.curselection()
-
+        
     iSearchIndex=\
     0 if len(sels) == 0 else s_listbox.curselection()[0]
         
     if iSearchIndex == 0:
-        Searchsport()
+        Searchsport(sports.get())
     elif iSearchIndex == 1:
         pass
     elif iSearchIndex == 2:
@@ -100,7 +101,7 @@ def onSearch():
     elif iSearchIndex == 3:
         pass
 # 검색 -> 스포츠
-def Searchsport():
+def Searchsport(sport):
     from xml.etree import ElementTree
 
     global sportscombo
@@ -112,28 +113,32 @@ def Searchsport():
 
     conn = http.client.HTTPSConnection(server)
 
-    conn.request(
-        "GET",
-        "/PublicLivelihood?KEY=3cccb5986c79462dae3acd235fa8a54f"
-    )
+    if(sport == "농구장"):
+        conn.request(
+            "GET",
+            "/PublicLivelihood?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
 
-    conn = http.client.HTTPSConnection(server)
-    conn.request(
-        "GET",
-        "/PublicTrainingFacilitySoccer?KEY=3cccb5986c79462dae3acd235fa8a54f"
-    )
+    #conn = http.client.HTTPSConnection(server)
+    elif(sport == "축구장"):
+        conn.request(
+            "GET",
+            "/PublicTrainingFacilitySoccer?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
 
-    conn = http.client.HTTPSConnection(server)
-    conn.request(
-        "GET",
-        "/PublicSwimmingPool?KEY=3cccb5986c79462dae3acd235fa8a54f"
-    )
+    #conn = http.client.HTTPSConnection(server)\
+    elif(sport == "수영장"):
+        conn.request(
+            "GET",
+            "/PublicSwimmingPool?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
 
-    conn = http.client.HTTPSConnection(server)
-    conn.request(
-        "GET",
-        "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
-    )
+    #conn = http.client.HTTPSConnection(server)
+    elif(sport == "실내스포츠(배드민턴, 탁구)"):
+        conn.request(
+            "GET",
+            "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
 
     res = conn.getresponse()
 
@@ -155,9 +160,9 @@ def Searchsport():
             continue
         _text = '[' + str(i) + '] ' + \
             getStr(item.find('FACLT_NM').text) + \
-            ' , ' + getStr(item.find('REFINE_LOTNO_ADDR').text) + \
-            ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text) + \
-            ' , ' + getStr(item.find('REFINE_WGS84_LAT').text)    
+            ' , ' + getStr(item.find('REFINE_LOTNO_ADDR').text)
+            # ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text) + \
+            # ' , ' + getStr(item.find('REFINE_WGS84_LAT').text)    
             # ' , ' + getStr(item.find('GYM_STND').text) + \
             # ' , ' + getStr(item.find('BUILD_AR').text) + \
             # ' , ' + getStr(item.find('SWIMPL_AR').text) + \
@@ -165,9 +170,7 @@ def Searchsport():
             # ' , ' + getStr(item.find('TRAINRM_RM_MATR').text) + \
             # ' , ' + getStr(item.find('EGYM_POSBL_ETRS_CONT').text) + \
             # ' , ' + getStr(item.find('ACEPTNC_PSNCNT').text) + \
-            # ' , ' + getStr(item.find('REFINE_LOTNO_ADDR').text) + \
-            # ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text) + \
-            # ' , ' + getStr(item.find('REFINE_WGS84_LAT').text)
+
             
             
         s_listbox.insert(i-1,_text)
