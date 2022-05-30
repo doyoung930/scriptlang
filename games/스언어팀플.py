@@ -80,6 +80,15 @@ def program_gui():
     # info_Text.config(width = 35, height = 21)
     # info_Text.place(x = 320, y = 80)
    
+    # 메일 버튼
+    mail_button = Button( root, text = "메일로 전송", height = 5, width = 10, command=partial(Send_email))
+    mail_button.place( x = 400, y= 400)
+
+    # 지도 버튼
+    map_button = Button( root, text = "지도로 이동", height = 5, width = 10, command=partial(sports_map))
+    map_button.place( x = 500, y= 400) 
+
+
 # #리스트 박스 이벤트
 def event_for_listbox(event):
     global info_listbox
@@ -197,17 +206,37 @@ def getStr(s):
 
 #지도로 이동
 def sports_map():
-    #지도로 이동하는 버튼
-    #map_image = PhotoImage(file = "C:/develop/map.gif")
-    map_button = Button( root, text = "지도로 이동", height = 5, width = 10)
-    map_button.place( x = 500, y= 400) 
+    global location
+    location = tkinter.Toplevel()
+    location.geometry ("500x600+550+100")
+    location.title("지도")
+    location.resizable(False, False )
+    location_font = tkinter.font.Font(family = "나눔 고딕" , size = 15)
+    
+    location_text= tkinter.Label(location, text = "[지도]", font = location_font)
+    location_text.pack()
 
 #이메일 보내기
 def Send_email():
-    mail_button = Button( root, text = "메일로 전송", height = 5, width = 10, command=partial(Send_email, sportscombo))
-    mail_button.place( x = 400, y= 400)
-
-
+    global mail
+    mail = tkinter.Toplevel()
+    mail.geometry ("350x100+650+400")
+    mail.title("메일")
+    mail.resizable(False, False )
+    mail_font = tkinter.font.Font(family = "나눔 고딕" , size = 15)
+    s_mail_font = tkinter.font.Font(family = "나눔 고딕" , size = 10)
+    
+    mail_text= tkinter.Label(mail, text = "[메일 전송]", font = mail_font)
+    mail_text.pack()
+        # 지역 검색박스
+    mailinput = ttk.Entry( mail,font = s_mail_font)
+    mailinput.config(width = 22)
+    mailinput.pack()
+    
+    #검색 버튼
+    global SearchButton
+    SearchButton = Button(mail, font = s_mail_font, text="전송")
+    SearchButton.pack()
 ##############
 def main():
 ##############s
@@ -229,8 +258,8 @@ def main():
     win_text.pack()
     
     program_gui()
-    sports_map()
-    Send_email()
+
+
 
 
     root.mainloop()
