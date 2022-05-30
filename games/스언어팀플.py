@@ -20,6 +20,8 @@ import tkinter.font
 from functools import partial
 import tkinter
 
+#지도
+import tkintermapview
 
 ###
 ###
@@ -215,7 +217,11 @@ def sports_map():
     
     location_text= tkinter.Label(location, text = "[지도]", font = location_font)
     location_text.pack()
-
+    map_widget = tkintermapview.TkinterMapView(location, width=800, height=500, corner_radius=0)
+    map_widget.pack()
+    map_widget.set_position(37.012603584211, 127.32631686988)
+    map_widget.set_address("경기 안성시 보개면 종합운동장로 162", marker=True)
+    map_widget.set_zoom(15)
 #이메일 보내기
 def Send_email():
     global mail
