@@ -8,6 +8,7 @@ from xml.dom.minidom import *
 import http.client
 import urllib.request
 from xml.dom.minidom import parseString
+from functools import partial
 
 #tk
 from tkinter import*
@@ -55,7 +56,7 @@ def program_gui():
     
     #검색 버튼
     global SearchButton
-    SearchButton = Button(font = state_font, text="검색", command=onSearch)
+    SearchButton = Button(font = state_font, text="검색", command=partial(onSearch, sportscombo))
     SearchButton.place(x= 540, y = 45)
 
     # 스포츠 센터 리스트 박스
@@ -82,17 +83,17 @@ def event_for_listbox(event):
         print(data)
 
 # 검색 버튼 상호작용 함수
-def onSearch():
+def onSearch(sports):
     global s_listbox
     s_listbox.delete(1, s_listbox.size)
     
     sels = s_listbox.curselection()
-
+        
     iSearchIndex=\
     0 if len(sels) == 0 else s_listbox.curselection()[0]
         
     if iSearchIndex == 0:
-        Searchsport()
+        Searchsport(sports.get())
     elif iSearchIndex == 1:
         pass
     elif iSearchIndex == 2:
@@ -100,7 +101,7 @@ def onSearch():
     elif iSearchIndex == 3:
         pass
 # 검색 -> 스포츠
-def Searchsport():
+def Searchsport(sport):
     from xml.etree import ElementTree
 
     global sportscombo
@@ -112,28 +113,32 @@ def Searchsport():
 
     conn = http.client.HTTPSConnection(server)
 
-    conn.request(
-        "GET",
-        "/PublicLivelihood?KEY=3cccb5986c79462dae3acd235fa8a54f"
-    )
+    if(sport == "농구장"):
+        conn.request(
+            "GET",
+            "/PublicLivelihood?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
 
-    conn = http.client.HTTPSConnection(server)
-    conn.request(
-        "GET",
-        "/PublicTrainingFacilitySoccer?KEY=3cccb5986c79462dae3acd235fa8a54f"
-    )
+    #conn = http.client.HTTPSConnection(server)
+    elif(sport == "축구장"):
+        conn.request(
+            "GET",
+            "/PublicTrainingFacilitySoccer?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
 
-    conn = http.client.HTTPSConnection(server)
-    conn.request(
-        "GET",
-        "/PublicSwimmingPool?KEY=3cccb5986c79462dae3acd235fa8a54f"
-    )
+    #conn = http.client.HTTPSConnection(server)\
+    elif(sport == "수영장"):
+        conn.request(
+            "GET",
+            "/PublicSwimmingPool?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
 
-    conn = http.client.HTTPSConnection(server)
-    conn.request(
-        "GET",
-        "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
-    )
+    #conn = http.client.HTTPSConnection(server)
+    elif(sport == "배드민턴" or sport == "탁구"):
+        conn.request(
+            "GET",
+            "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
 
     res = conn.getresponse()
 
