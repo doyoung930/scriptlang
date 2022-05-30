@@ -73,14 +73,28 @@ def program_gui():
     info_listbox.config(font = state_font, activestyle='none', selectmode = BROWSE)
     info_listbox.config(width = 35, height = 20)
     info_listbox.place(x = 320 , y = 80)
+
+    # global info_Text
+    # info_Text = Text(root,borderwidth=12, relief='ridge')
+    # info_Text.config(wrap = 'c', font = state_font)
+    # info_Text.config(width = 35, height = 21)
+    # info_Text.place(x = 320, y = 80)
    
 # #리스트 박스 이벤트
 def event_for_listbox(event):
+    global info_listbox
+    global elements
+    global parseData
+    global strXml
+    info_listbox.delete(0,info_listbox.size())
     selection = event.widget.curselection()
     if selection:
         index = selection[0]
         data = event.widget.get(index)
         print(data)
+    
+    info_listbox.insert(1, data)
+    
 
 # 검색 버튼 상호작용 함수
 def onSearch(sports):
@@ -134,11 +148,7 @@ def Searchsport(sport):
         )
 
     #conn = http.client.HTTPSConnection(server)
-<<<<<<< HEAD
     elif(sport == "실내스포츠(배드민턴, 탁구)"):
-=======
-    elif(sport == "배드민턴" or sport == "탁구"):
->>>>>>> 52e1e01e5cee6c026d3db8218bf49769a3a3a94c
         conn.request(
             "GET",
             "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
@@ -148,6 +158,8 @@ def Searchsport(sport):
 
     global strXml
     global stateinput
+    global parseData
+    global elements
 
     if int(res.status) == 200:
         print("읽어 오는데 성공")
@@ -164,17 +176,8 @@ def Searchsport(sport):
             continue
         _text = '[' + str(i) + '] ' + \
             getStr(item.find('FACLT_NM').text) + \
-            ' , ' + getStr(item.find('REFINE_LOTNO_ADDR').text)
-            # ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text) + \
-            # ' , ' + getStr(item.find('REFINE_WGS84_LAT').text)    
-            # ' , ' + getStr(item.find('GYM_STND').text) + \
-            # ' , ' + getStr(item.find('BUILD_AR').text) + \
-            # ' , ' + getStr(item.find('SWIMPL_AR').text) + \
-            # ' , ' + getStr(item.find('SWIMPL_STND').text) + \
-            # ' , ' + getStr(item.find('TRAINRM_RM_MATR').text) + \
-            # ' , ' + getStr(item.find('EGYM_POSBL_ETRS_CONT').text) + \
-            # ' , ' + getStr(item.find('ACEPTNC_PSNCNT').text) + \
-
+            ' , ' + getStr(item.find('SIGUN_NM').text) + \
+            ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text)
             
             
         s_listbox.insert(i-1,_text)
@@ -201,8 +204,9 @@ def sports_map():
 
 #이메일 보내기
 def Send_email():
-    mail_button = Button( root, text = "메일로 전송", height = 5, width = 10)
+    mail_button = Button( root, text = "메일로 전송", height = 5, width = 10, command=partial(Send_email, sportscombo))
     mail_button.place( x = 400, y= 400)
+
 
 ##############
 def main():
