@@ -84,7 +84,7 @@ def program_gui():
    
     # 메일 버튼
     mail_button = Button( root, text = "메일로 전송", height = 5, width = 10, command=partial(Send_email))
-    mail_button.place( x = 400, y= 400)
+    mail_button.place( x = 500, y= 500)
 
     # 지도 버튼
     map_button = Button( root, text = "지도로 이동", height = 5, width = 10, command=partial(sports_map))
