@@ -152,6 +152,7 @@ class Dice:
         self.roll=random.randint(1,6)
     def getRoll(self):
         return self.roll
+
 class Player:
     UPPER = 6 # upper category 6개
     LOWER = 7 # lower category 7개
@@ -268,7 +269,7 @@ class YahtzeeBoard:
                         self.fields.append(list())
     # i-1행에 플레이어 개수 만큼 버튼 추가하고 이벤트 Listener 설정, 매개변수 설정
                     self.fields[i - 1].append(Button(self.window, text="", font=self.TempFont, width=8,
-                                     command=lambda row=i - 1: self.categoryListener(row)))
+                                    command=lambda row=i - 1: self.categoryListener(row)))
                     self.fields[i - 1][j].grid(row=i, column=2 + j)
     # 누를 필요없는 버튼은 disable 시킴
                     if (j != self.player or (i - 1) == self.UPPERTOTAL or (i - 1) == self.UPPERBONUS
@@ -287,8 +288,7 @@ class YahtzeeBoard:
                 self.dice[i].rollDie()
                 self.diceButtons[i].configure(text=str(self.dice[i].getRoll()))
             else:
-                self.diceButtons[i]['state'] = 'normal'
-                self.diceButtons[i]['bg'] = 'SystemButtonFace'
+                pass
         if (self.roll == 0 or self.roll == 1):
             self.roll += 1
             self.rollDice.configure(text="Roll Again")
@@ -305,68 +305,67 @@ class YahtzeeBoard:
                 self.diceButtons[row]['bg'] = 'light gray'
 
     def categoryListener(self, row):  # categoryListener
+        if(self.roll != 0):                         # 주사위를 한 번이라도 돌렸는가?
+            score = Configuration.score(row, self.dice)  # 점수 계산
 
-        score = Configuration.score(row, self.dice)  # 점수 계산
-
-
-        index = row
-        if (row > 7):
-            index = row - 2
-    # 선택한 카테고리 점수 적고 disable 시킴
-        self.players[self.player].setScore(score, index)
-        self.players[self.player].setAtUsed(index)
-        self.fields[row][self.player].configure(text=str(score))
-        self.fields[row][self.player]['state'] = 'disabled'
-        self.fields[row][self.player]['bg'] = 'light gray'
-        # UPPER category가 전부 사용되었으면 UpperScore, UpperBonus 계산
-        if (self.players[self.player].allUpperUsed()):
-            self.fields[self.UPPERTOTAL][self.player].configure(text=
-                                                            str(self.players[self.player].getUpperScore()))
-            if (self.players[self.player].getUpperScore() > 63):
-                self.fields[self.UPPERBONUS][self.player].configure(text="35")  # UPPERBONUS=7
-            else:
-                self.fields[self.UPPERBONUS][self.player].configure(text="0")  # UPPERBONUS=7
-
-        if (self.players[self.player].allLowerUsed()):
-            self.fields[self.LOWERTOTAL][self.player].configure(text=str(self.players[self.player].getLowerScore()))
-        # UPPER category와 LOWER category가 전부 사용되었으면 TOTAL 계산
-        if (self.players[self.player].allUpperUsed() and self.players[self.player].allLowerUsed()):
-            self.fields[self.TOTAL][self.player].configure(text=str(self.players[self.player].getTotalScore()))
-        # 다음 플레이어로 넘어가고 선택할 수 없는 카테고리들은 disable 시킴
-        self.player = (self.player + 1) % self.numPlayers
-
-        for i in range(self.TOTAL + 1):
-            for j in range(self.numPlayers):
-                self.fields[i][j]['state'] = 'disabled'
-                self.fields[i][j]['bg'] = 'light gray'
-
-                if (j != self.player or (i) == self.UPPERTOTAL or (i) == self.UPPERBONUS
-                        or (i) == self.LOWERTOTAL or (i)  == self.TOTAL):
-                        self.fields[i][j]['state'] = 'disabled'
-                        self.fields[i][j]['bg'] = 'light gray'
-                elif  self.fields[i][self.player]['text']:
-                    self.fields[i][self.player]['state'] = 'disabled'
-                    self.fields[i][self.player]['bg'] = 'light gray'
+            index = row
+            if (row > 7):
+                index = row - 2
+        # 선택한 카테고리 점수 적고 disable 시킴
+            self.players[self.player].setScore(score, index)
+            self.players[self.player].setAtUsed(index)
+            self.fields[row][self.player].configure(text=str(score))
+            self.fields[row][self.player]['state'] = 'disabled'
+            self.fields[row][self.player]['bg'] = 'light gray'
+            # UPPER category가 전부 사용되었으면 UpperScore, UpperBonus 계산
+            if (self.players[self.player].allUpperUsed()):
+                self.fields[self.UPPERTOTAL][self.player].configure(text=
+                                                                str(self.players[self.player].getUpperScore()))
+                if (self.players[self.player].getUpperScore() > 63):
+                    self.fields[self.UPPERBONUS][self.player].configure(text="35")  # UPPERBONUS=7
                 else:
-                    self.fields[i][self.player]['state'] = 'normal'
-                    self.fields[i][self.player]['bg'] = 'SystemButtonFace'
-        if(self.player==0):
-            self.round+=1
-        if(self.round==13):
-            d={}
-            for x in self.players:
-                d[x.toString()]=x.getTotalScore()
-            val=max(d.values())
-            resurtList=list(key for key,value in d.items() if value ==val)
-            if len(resurtList)==1:
-               a="승자는: "+resurtList[0]+" 입니다."
-               self.winnertag=Label(self.window, text=a, font=self.TempFont).grid(row=10,column=0)
-            else:
-                resultstr=""
-                for x in resurtList:
-                    resultstr+=resultstr+x+","
-                resultstr+="가 비겼습니다."
-                self.winnertag = Label(self.window, text=resultstr, font=self.TempFont).grid(row=10,column=0)
+                    self.fields[self.UPPERBONUS][self.player].configure(text="0")  # UPPERBONUS=7
+
+            if (self.players[self.player].allLowerUsed()):
+                self.fields[self.LOWERTOTAL][self.player].configure(text=str(self.players[self.player].getLowerScore()))
+            # UPPER category와 LOWER category가 전부 사용되었으면 TOTAL 계산
+            if (self.players[self.player].allUpperUsed() and self.players[self.player].allLowerUsed()):
+                self.fields[self.TOTAL][self.player].configure(text=str(self.players[self.player].getTotalScore()))
+            # 다음 플레이어로 넘어가고 선택할 수 없는 카테고리들은 disable 시킴
+            self.player = (self.player + 1) % self.numPlayers
+
+            for i in range(self.TOTAL + 1):
+                for j in range(self.numPlayers):
+                    self.fields[i][j]['state'] = 'disabled'
+                    self.fields[i][j]['bg'] = 'light gray'
+
+                    if (j != self.player or (i) == self.UPPERTOTAL or (i) == self.UPPERBONUS
+                            or (i) == self.LOWERTOTAL or (i)  == self.TOTAL):
+                            self.fields[i][j]['state'] = 'disabled'
+                            self.fields[i][j]['bg'] = 'light gray'
+                    elif  self.fields[i][self.player]['text']:
+                        self.fields[i][self.player]['state'] = 'disabled'
+                        self.fields[i][self.player]['bg'] = 'light gray'
+                    else:
+                        self.fields[i][self.player]['state'] = 'normal'
+                        self.fields[i][self.player]['bg'] = 'SystemButtonFace'
+            if(self.player==0):
+                self.round+=1
+            if(self.round==13):
+                d={}
+                for x in self.players:
+                    d[x.toString()]=x.getTotalScore()
+                val=max(d.values())
+                resurtList=list(key for key,value in d.items() if value ==val)
+                if len(resurtList)==1:
+                    a="승자는: "+resurtList[0]+" 입니다."
+                    self.winnertag=Label(self.window, text=a, font=self.TempFont).grid(row=10,column=0)
+                else:
+                    resultstr=""
+                    for x in resurtList:
+                        resultstr+=resultstr+x+","
+                    resultstr+="가 비겼습니다."
+                    self.winnertag = Label(self.window, text=resultstr, font=self.TempFont).grid(row=10,column=0)
 
             #비김 , 승자 처리
             pass
