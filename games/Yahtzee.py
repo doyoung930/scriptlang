@@ -1,9 +1,11 @@
 ### Yahtzee_이도_이도영.py
 
+
 from tkinter import *
 from tkinter import font
-import tkinter.messagebox
+from tkinter import messagebox
 import random
+
 
 class Configuration:
     configs = ["Category", "Ones", "Twos", "Threes", "Fours", "Fives", "Sixes",
@@ -215,6 +217,8 @@ class YahtzeeBoard:
         self.InitPlayers()
 
     def InitPlayers(self):  # player window 생성하고 최대 10명까지 플레이어 설정
+        
+        
         self.pwindow = Tk()
 
         self.TempFont = font.Font(size=16, weight='bold', family='Consolas')
@@ -358,15 +362,49 @@ class YahtzeeBoard:
                 val=max(d.values())
                 resurtList=list(key for key,value in d.items() if value ==val)
                 if len(resurtList)==1:
-                    a="승자는: "+resurtList[0]+" 입니다."
-                    self.winnertag=Label(self.window, text=a, font=self.TempFont).grid(row=10,column=0)
+                    a="승자는: "+resurtList[0]+" 입니다. 다시시작하겠습니까? "
+                    #self.winnertag=Label(self.window, text=a, font=self.TempFont).grid(row=10,column=0)
+                    messagebox.showinfo("승자", a)
+                    
+                    self.window.destroy()
+                    self.UPPERTOTAL = 6  # UpperScore
+                    self.UPPERBONUS = 7  # UpperBonus
+                    self.LOWERTOTAL = 15  # LowerScore
+                    self.TOTAL = 16  # Total
+                    self.dice = []  # Dice 객체 리스트
+                    self.diceButtons = []  # diceButton 리스트
+                    self.fields = []  # 각 플레이어 점수판 2차원 리스트
+                    # 열 플레이어, 0열=플레이어1, 1열=플레이어2,…
+                    # 17행 점수 = 카테고리13행 + upperScore + upperBonus + LowerScore + Total
+                    self.players = []  # player 객체 리스트
+                    self.numPlayers = 0
+                    self.player = 0  # 플레이어 순서를 제어
+                    self.round = 0  # 13라운드를 제어
+                    self.roll = 0  # 각 라운드 마다 3번 굴리기 roll를 할 수 있음
+                    self.InitPlayers()
                 else:
                     resultstr=""
                     for x in resurtList:
                         resultstr+=resultstr+x+","
                     resultstr+="가 비겼습니다."
-                    self.winnertag = Label(self.window, text=resultstr, font=self.TempFont).grid(row=10,column=0)
-
+                    #self.winnertag = Label(self.window, text=resultstr, font=self.TempFont).grid(row=10,column=0)
+                    messagebox.showinfo("비김", resultstr)
+                    self.window.destroy()
+                    self.UPPERTOTAL = 6  # UpperScore
+                    self.UPPERBONUS = 7  # UpperBonus
+                    self.LOWERTOTAL = 15  # LowerScore
+                    self.TOTAL = 16  # Total
+                    self.dice = []  # Dice 객체 리스트
+                    self.diceButtons = []  # diceButton 리스트
+                    self.fields = []  # 각 플레이어 점수판 2차원 리스트
+                    # 열 플레이어, 0열=플레이어1, 1열=플레이어2,…
+                    # 17행 점수 = 카테고리13행 + upperScore + upperBonus + LowerScore + Total
+                    self.players = []  # player 객체 리스트
+                    self.numPlayers = 0
+                    self.player = 0  # 플레이어 순서를 제어
+                    self.round = 0  # 13라운드를 제어
+                    self.roll = 0  # 각 라운드 마다 3번 굴리기 roll를 할 수 있음
+                    self.InitPlayers()
             #비김 , 승자 처리
             pass
 
@@ -384,4 +422,9 @@ class YahtzeeBoard:
         self.bottomLabel.configure(text=self.players[self.player].toString() +
                                    "차례: Roll Dice 버튼을 누르세요")
         print(self.round)
+
+
+
+
+
 YahtzeeBoard()
