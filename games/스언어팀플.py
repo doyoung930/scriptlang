@@ -14,6 +14,7 @@ from functools import partial
 from tkinter import*
 import tkinter.ttk as ttk
 import tkinter.font
+from PIL import ImageTk
 
 
 # Button에 패러매터를 주기 위한 모듈
@@ -83,7 +84,10 @@ def program_gui():
     # info_Text.place(x = 320, y = 80)
    
     # 메일 버튼
+    
+    #mail_image = PhotoImage(file = "C:/Users/doyou/OneDrive/문서/GitHub/scriptlang/games/mailicon2.png")
     mail_button = Button( root, text = "메일로 전송", height = 5, width = 10, command=partial(Send_email))
+    #mail_button = Button( root, image = mail_image, command=partial(Send_email))
     mail_button.place( x = 500, y= 500)
 
     # 지도 버튼
