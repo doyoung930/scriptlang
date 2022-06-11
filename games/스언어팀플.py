@@ -44,7 +44,7 @@ def program_gui():
     state_text.place( x= 20, y = 52)
 
     global sportscombo
-    sports_values = ["축구장", "농구장", "수영장", "실내스포츠(배드민턴, 탁구)"]
+    sports_values = ["축구장", "농구장", "수영장", "실내스포츠(배드민턴, 탁구)", "선택안함"]
     sportscombo = ttk.Combobox(root, values = sports_values)
     sportscombo.config(height=10,width = 25)
     sportscombo.config(state="readonly")
@@ -98,9 +98,6 @@ def program_gui():
 # #리스트 박스 이벤트
 def event_for_listbox(event):
     global info_listbox
-    global elements
-    global parseData
-    global strXml
     info_listbox.delete(0,info_listbox.size())
     selection = event.widget.curselection()
     if selection:
@@ -140,63 +137,102 @@ def Searchsport(sport):
 
     #key_value = 3cccb5986c79462dae3acd235fa8a54f
 
-    conn = http.client.HTTPSConnection(server)
+    # conn = http.client.HTTPSConnection(server)
 
-    if(sport == "농구장"):
-        conn.request(
+    # if(sport == "농구장"):
+    #     conn.request(
+    #         "GET",
+    #         "/PublicLivelihood?KEY=3cccb5986c79462dae3acd235fa8a54f"
+    #     )
+
+    # #conn = http.client.HTTPSConnection(server)
+    # elif(sport == "축구장"):
+    #     conn.request(
+    #         "GET",
+    #         "/PublicTrainingFacilitySoccer?KEY=3cccb5986c79462dae3acd235fa8a54f"
+    #     )
+
+    # #conn = http.client.HTTPSConnection(server)\
+    # elif(sport == "수영장"):
+    #     conn.request(
+    #         "GET",
+    #         "/PublicSwimmingPool?KEY=3cccb5986c79462dae3acd235fa8a54f"
+    #     )
+
+    # #conn = http.client.HTTPSConnection(server)
+    # elif(sport == "실내스포츠(배드민턴, 탁구)"):
+    #     conn.request(
+    #         "GET",
+    #         "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
+    #     )
+    basket_conn = http.client.HTTPSConnection(server)
+    basket_conn.request(
             "GET",
             "/PublicLivelihood?KEY=3cccb5986c79462dae3acd235fa8a54f"
         )
 
-    #conn = http.client.HTTPSConnection(server)
-    elif(sport == "축구장"):
-        conn.request(
+    foot_conn = http.client.HTTPSConnection(server)
+    foot_conn.request(
             "GET",
             "/PublicTrainingFacilitySoccer?KEY=3cccb5986c79462dae3acd235fa8a54f"
         )
 
-    #conn = http.client.HTTPSConnection(server)\
-    elif(sport == "수영장"):
-        conn.request(
-            "GET",
-            "/PublicSwimmingPool?KEY=3cccb5986c79462dae3acd235fa8a54f"
-        )
-
-    #conn = http.client.HTTPSConnection(server)
-    elif(sport == "실내스포츠(배드민턴, 탁구)"):
-        conn.request(
-            "GET",
-            "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
-        )
-
-    res = conn.getresponse()
-
-    global strXml
     global stateinput
-    global parseData
-    global elements
 
-    if int(res.status) == 200:
-        print("읽어 오는데 성공")
-        strXml = res.read().decode('utf-8')
-       # print(parseString(res.read().decode('utf-8')).toprettyxml())
-    else:
-        print('HTTP request failed : ', res.reason)
-    parseData = ElementTree.fromstring(strXml)
-    elements = parseData.iter('row')
     i = 1
-    for item in elements: # " row“ element들
-        part_el = item.find('SIGUN_NM')
-        if stateinput.get() not in part_el.text:
-            continue
-        _text = '[' + str(i) + '] ' + \
-            getStr(item.find('FACLT_NM').text) + \
-            ' , ' + getStr(item.find('SIGUN_NM').text) + \
-            ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text)
+
+    # 농구 데이터-------------------------------------------------------------
+    if(sport == "농구장" or sport == "선택안함"):
+        basket_res = basket_conn.getresponse()
+
+        if int(basket_res.status) == 200:
+            print("농구장 읽어 오는데 성공")
+            basket_strXml = basket_res.read().decode('utf-8')
+        else:
+            print('HTTP request failed : ', basket_res.reason)
+
+        basket_parseData = ElementTree.fromstring(basket_strXml)
+        basket_elements = basket_parseData.iter('row')
+
+        for item in basket_elements: # " row“ element들
+            part_el = item.find('SIGUN_NM')
+            if stateinput.get() not in part_el.text:
+                continue
+            _text = '[' + str(i) + '] ' + \
+                getStr(item.find('FACLT_NM').text) + \
+                ' , ' + getStr(item.find('SIGUN_NM').text) + \
+                ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text)
+                
+                
+            s_listbox.insert(i-1,_text)
+            i = i+1
+    
+    # 축구 데이터-------------------------------------------------------------
+    if(sport == "축구장" or sport == "선택안함"):
+        foot_res = foot_conn.getresponse()
+
+        if int(foot_res.status) == 200:
+            print("축구장 읽어 오는데 성공")
+            foot_strXml = foot_res.read().decode('utf-8')
+        else:
+            print('HTTP request failed : ', foot_res.reason)
             
-            
-        s_listbox.insert(i-1,_text)
-        i = i+1
+        foot_parseData = ElementTree.fromstring(foot_strXml)
+        foot_elements = foot_parseData.iter('row')
+
+        for item in foot_elements: # " row“ element들
+            part_el = item.find('SIGUN_NM')
+            if stateinput.get() not in part_el.text:
+                continue
+            _text = '[' + str(i) + '] ' + \
+                getStr(item.find('FACLT_NM').text) + \
+                ' , ' + getStr(item.find('SIGUN_NM').text) + \
+                ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text)
+                
+                
+            s_listbox.insert(i-1,_text)
+            i = i+1
+
 
 def getStr(s):
     return '' if not s else s
