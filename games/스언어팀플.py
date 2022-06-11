@@ -165,6 +165,7 @@ def Searchsport(sport):
 
     # 농구 데이터-------------------------------------------------------------
     if(sport == "농구장" or sport == "선택안함"):
+        bs_num = 0
         basket_res = basket_conn.getresponse()
 
         if int(basket_res.status) == 200:
@@ -184,13 +185,14 @@ def Searchsport(sport):
                 getStr(item.find('FACLT_NM').text) + \
                 ' , ' + getStr(item.find('SIGUN_NM').text) + \
                 ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text)
-                
-                
+            
+            bs_num += 1
             s_listbox.insert(i-1,_text)
             i = i+1
     
     # 축구 데이터-------------------------------------------------------------
     if(sport == "축구장" or sport == "선택안함"):
+        ft_num = 0
         foot_res = foot_conn.getresponse()
 
         if int(foot_res.status) == 200:
@@ -211,12 +213,14 @@ def Searchsport(sport):
                 ' , ' + getStr(item.find('SIGUN_NM').text) + \
                 ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text)
                 
-                
+            ft_num += 1
+
             s_listbox.insert(i-1,_text)
             i = i+1
     
     # 수영 데이터-------------------------------------------------------------
     if(sport == "수영장" or sport == "선택안함"):
+        sw_num = 0
         swim_res = swim_conn.getresponse()
 
         if int(swim_res.status) == 200:
@@ -237,12 +241,14 @@ def Searchsport(sport):
                 ' , ' + getStr(item.find('SIGUN_NM').text) + \
                 ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text)
                 
-                
+            sw_num += 1
+
             s_listbox.insert(i-1,_text)
             i = i+1
     
     # 실내스포츠 데이터-------------------------------------------------------------
     if(sport == "실내스포츠(배드민턴, 탁구)" or sport == "선택안함"):
+        ins_num = 0
         inside_res = inside_conn.getresponse()
 
         if int(inside_res.status) == 200:
@@ -263,9 +269,56 @@ def Searchsport(sport):
                 ' , ' + getStr(item.find('SIGUN_NM').text) + \
                 ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text)
                 
-                
+            ins_num += 1
+
             s_listbox.insert(i-1,_text)
             i = i+1
+    
+    # 그래프 그리기
+    drawGraph(sport, [{'name' : '농구', "value" : bs_num}, {'name' :'축구', "value" : ft_num},\
+        {'name' :'수영', "value" : sw_num}, {'name' :'실내', "value" : ins_num}])
+
+# 그래프 그리는 함수
+def drawGraph(sport, data):
+    # 그래프 크기는, [left, top, right, bottom] = [20, 400, 480, 650], 가로 = 460px, 세로 = 250px
+    global root
+    if(sport == "선택안함"):
+        nData = len(data)
+        nMax = max(data, key=lambda x:x['value'])
+        nMin = min(data, key=lambda x:x['value'])
+
+        canvasWidth = 460
+        canvasHeight = 250
+
+        canvas = Canvas(root, width=canvasWidth, height=canvasHeight, bg='white')
+        canvas.place(x=20, y=400)
+
+        canvas.create_rectangle(20, 400, 460, 250, fill='white', tag="graph")
+
+        if nMax == 0:                           # 만약 데이터를 못 불러왔다면 끝낸다
+            return
+        
+        rectHeight = (canvasHeight // nData)
+        right = (canvasWidth - 40)
+        maxWidth = canvasWidth - 80
+
+        for i in range(nData):
+            if nMax["value"] == data[i]["value"]: 
+                color="red"
+            elif nMin["value"] == data[i]["value"]:
+                color = "blue"
+            else:
+                color = "gray"
+
+            curWidth = maxWidth * data[i]["value"] / nMax["value"]
+            left = right - curWidth
+            top = i * rectHeight
+            bottom = (i + 1) * rectHeight
+
+            canvas.create_rectangle(left, top, right, bottom, fill=color, tag="graph")
+
+            if(data[i]["name"] == "농구"):
+                canvas.create_text((top + bottom) // 2, left - 15, text=data[i]["name"])
 
 
 def getStr(s):
