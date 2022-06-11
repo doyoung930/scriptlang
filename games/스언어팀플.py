@@ -62,14 +62,19 @@ def program_gui():
     SearchButton = Button(font = state_font, text="검색", command=partial(onSearch, sportscombo))
     SearchButton.place(x= 540, y = 45)
 
+    global s_frame
+    s_frame = Frame(root, borderwidth=12)
+    s_frame.config(width=38, height=20)
+    s_frame.place(x=20, y=80, width=38, height=20)
+
     # 스포츠 센터 리스트 박스
     global s_listbox
-    s_listbox = Listbox(root,borderwidth=12, relief='ridge')
+    s_listbox = Listbox(s_frame,borderwidth=12, relief='ridge')
     s_listbox.config(font = state_font, activestyle='none', selectmode = BROWSE)
     s_listbox.config(width = 38, height = 20)
     s_listbox.place(x = 20, y = 80)
     s_listbox.bind('<<ListboxSelect>>', event_for_listbox)    ## 고르면 리스트박스 이벤트 함수로
-    
+
     # 스포츠 센터 정보를 주는 리스트박스
     global info_listbox
     info_listbox = Listbox(root,borderwidth=12, relief='ridge')
@@ -160,6 +165,7 @@ def Searchsport(sport):
         
 
     global stateinput
+    global s_listbox
 
     i = 1
 
@@ -169,7 +175,7 @@ def Searchsport(sport):
         basket_res = basket_conn.getresponse()
 
         if int(basket_res.status) == 200:
-            print("농구장 읽어 오는데 성공")
+            #print("농구장 읽어 오는데 성공")
             basket_strXml = basket_res.read().decode('utf-8')
         else:
             print('HTTP request failed : ', basket_res.reason)
@@ -183,8 +189,7 @@ def Searchsport(sport):
                 continue
             _text = '[' + str(i) + '] ' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ' , ' + getStr(item.find('SIGUN_NM').text) + \
-                ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text)
+                ' , ' + getStr(item.find('SIGUN_NM').text)
             
             bs_num += 1
             s_listbox.insert(i-1,_text)
@@ -196,7 +201,7 @@ def Searchsport(sport):
         foot_res = foot_conn.getresponse()
 
         if int(foot_res.status) == 200:
-            print("축구장 읽어 오는데 성공")
+            #print("축구장 읽어 오는데 성공")
             foot_strXml = foot_res.read().decode('utf-8')
         else:
             print('HTTP request failed : ', foot_res.reason)
@@ -210,8 +215,7 @@ def Searchsport(sport):
                 continue
             _text = '[' + str(i) + '] ' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ' , ' + getStr(item.find('SIGUN_NM').text) + \
-                ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text)
+                ' , ' + getStr(item.find('SIGUN_NM').text)
                 
             ft_num += 1
 
@@ -224,7 +228,7 @@ def Searchsport(sport):
         swim_res = swim_conn.getresponse()
 
         if int(swim_res.status) == 200:
-            print("수영장 읽어 오는데 성공")
+            #print("수영장 읽어 오는데 성공")
             swim_strXml = swim_res.read().decode('utf-8')
         else:
             print('HTTP request failed : ', swim_res.reason)
@@ -238,8 +242,7 @@ def Searchsport(sport):
                 continue
             _text = '[' + str(i) + '] ' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ' , ' + getStr(item.find('SIGUN_NM').text) + \
-                ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text)
+                ' , ' + getStr(item.find('SIGUN_NM').text)
                 
             sw_num += 1
 
@@ -252,7 +255,7 @@ def Searchsport(sport):
         inside_res = inside_conn.getresponse()
 
         if int(inside_res.status) == 200:
-            print("실내스포츠 읽어 오는데 성공")
+            #print("실내스포츠 읽어 오는데 성공")
             inside_strXml = inside_res.read().decode('utf-8')
         else:
             print('HTTP request failed : ', inside_res.reason)
@@ -266,14 +269,21 @@ def Searchsport(sport):
                 continue
             _text = '[' + str(i) + '] ' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ' , ' + getStr(item.find('SIGUN_NM').text) + \
-                ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text)
+                ' , ' + getStr(item.find('SIGUN_NM').text)
                 
             ins_num += 1
 
             s_listbox.insert(i-1,_text)
             i = i+1
+
+    # 스크롤 바
+    global scrollbar
     
+    scrollbar = Scrollbar(s_listbox)
+    #scrollbar.place(x = 300 , y = 80)
+    scrollbar.set
+    scrollbar.config(command=s_listbox.yview)
+
     # 그래프 그리기
     drawGraph(sport, [{'name' : '농구', "value" : bs_num}, {'name' :'축구', "value" : ft_num},\
         {'name' :'수영', "value" : sw_num}, {'name' :'실내', "value" : ins_num}])
@@ -295,7 +305,7 @@ def drawGraph(sport, data):
 
         canvas.create_rectangle(20, 400, 460, 250, fill='white', tag="graph")
 
-        if nMax == 0:                           # 만약 데이터를 못 불러왔다면 끝낸다
+        if nMax["value"] == 0:                           # 만약 데이터를 못 불러왔다면 끝낸다
             return
         
         rectHeight = (canvasHeight // nData)
