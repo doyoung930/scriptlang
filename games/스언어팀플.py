@@ -317,8 +317,8 @@ def drawGraph(sport, data):
 
             canvas.create_rectangle(left, top, right, bottom, fill=color, tag="graph")
 
-            if(data[i]["name"] == "농구"):
-                canvas.create_text((top + bottom) // 2, left - 15, text=data[i]["name"])
+            canvas.create_text(left - 20, (top + bottom) // 2, text=data[i]["value"])
+            canvas.create_text(right + 20, (top + bottom) // 2, text=data[i]["name"])
 
 
 def getStr(s):
