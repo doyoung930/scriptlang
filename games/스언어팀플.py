@@ -62,14 +62,15 @@ def program_gui():
     SearchButton = Button(font = state_font, text="검색", command=partial(onSearch, sportscombo))
     SearchButton.place(x= 540, y = 45)
 
-    global s_frame
-    s_frame = Frame(root, borderwidth=12)
-    s_frame.config(width=38, height=20)
-    s_frame.place(x=20, y=80, width=38, height=20)
+    # # 스포츠 리스트 프레임
+    # global s_frame
+    # s_frame = Frame(root, borderwidth=12)
+    # s_frame.config(width=38, height=20)
+    # s_frame.place(x=20, y=80)
 
     # 스포츠 센터 리스트 박스
     global s_listbox
-    s_listbox = Listbox(s_frame,borderwidth=12, relief='ridge')
+    s_listbox = Listbox(root,borderwidth=12, relief='ridge')
     s_listbox.config(font = state_font, activestyle='none', selectmode = BROWSE)
     s_listbox.config(width = 38, height = 20)
     s_listbox.place(x = 20, y = 80)
