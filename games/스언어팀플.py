@@ -131,40 +131,9 @@ def Searchsport(sport):
     from xml.etree import ElementTree
 
     global sportscombo
-  #  sportscombo.delete(0, sportscombo.size())
 
     server = "openapi.gg.go.kr"
 
-    #key_value = 3cccb5986c79462dae3acd235fa8a54f
-
-    # conn = http.client.HTTPSConnection(server)
-
-    # if(sport == "농구장"):
-    #     conn.request(
-    #         "GET",
-    #         "/PublicLivelihood?KEY=3cccb5986c79462dae3acd235fa8a54f"
-    #     )
-
-    # #conn = http.client.HTTPSConnection(server)
-    # elif(sport == "축구장"):
-    #     conn.request(
-    #         "GET",
-    #         "/PublicTrainingFacilitySoccer?KEY=3cccb5986c79462dae3acd235fa8a54f"
-    #     )
-
-    # #conn = http.client.HTTPSConnection(server)\
-    # elif(sport == "수영장"):
-    #     conn.request(
-    #         "GET",
-    #         "/PublicSwimmingPool?KEY=3cccb5986c79462dae3acd235fa8a54f"
-    #     )
-
-    # #conn = http.client.HTTPSConnection(server)
-    # elif(sport == "실내스포츠(배드민턴, 탁구)"):
-    #     conn.request(
-    #         "GET",
-    #         "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
-    #     )
     basket_conn = http.client.HTTPSConnection(server)
     basket_conn.request(
             "GET",
@@ -176,6 +145,19 @@ def Searchsport(sport):
             "GET",
             "/PublicTrainingFacilitySoccer?KEY=3cccb5986c79462dae3acd235fa8a54f"
         )
+    
+    swim_conn = http.client.HTTPSConnection(server)
+    swim_conn.request(
+            "GET",
+            "/PublicSwimmingPool?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
+    
+    inside_conn = http.client.HTTPSConnection(server)
+    inside_conn.request(
+            "GET",
+            "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
+        
 
     global stateinput
 
@@ -221,6 +203,58 @@ def Searchsport(sport):
         foot_elements = foot_parseData.iter('row')
 
         for item in foot_elements: # " row“ element들
+            part_el = item.find('SIGUN_NM')
+            if stateinput.get() not in part_el.text:
+                continue
+            _text = '[' + str(i) + '] ' + \
+                getStr(item.find('FACLT_NM').text) + \
+                ' , ' + getStr(item.find('SIGUN_NM').text) + \
+                ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text)
+                
+                
+            s_listbox.insert(i-1,_text)
+            i = i+1
+    
+    # 수영 데이터-------------------------------------------------------------
+    if(sport == "수영장" or sport == "선택안함"):
+        swim_res = swim_conn.getresponse()
+
+        if int(swim_res.status) == 200:
+            print("수영장 읽어 오는데 성공")
+            swim_strXml = swim_res.read().decode('utf-8')
+        else:
+            print('HTTP request failed : ', swim_res.reason)
+            
+        swim_parseData = ElementTree.fromstring(swim_strXml)
+        swim_elements = swim_parseData.iter('row')
+
+        for item in swim_elements: # " row“ element들
+            part_el = item.find('SIGUN_NM')
+            if stateinput.get() not in part_el.text:
+                continue
+            _text = '[' + str(i) + '] ' + \
+                getStr(item.find('FACLT_NM').text) + \
+                ' , ' + getStr(item.find('SIGUN_NM').text) + \
+                ' , ' + getStr(item.find('REFINE_ROADNM_ADDR').text)
+                
+                
+            s_listbox.insert(i-1,_text)
+            i = i+1
+    
+    # 실내스포츠 데이터-------------------------------------------------------------
+    if(sport == "실내스포츠(배드민턴, 탁구)" or sport == "선택안함"):
+        inside_res = inside_conn.getresponse()
+
+        if int(inside_res.status) == 200:
+            print("실내스포츠 읽어 오는데 성공")
+            inside_strXml = inside_res.read().decode('utf-8')
+        else:
+            print('HTTP request failed : ', inside_res.reason)
+            
+        inside_parseData = ElementTree.fromstring(inside_strXml)
+        inside_elements = inside_parseData.iter('row')
+
+        for item in inside_elements: # " row“ element들
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
                 continue
