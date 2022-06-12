@@ -27,7 +27,7 @@ import tkintermapview
 ###
 ###
 ###
-
+ 
 ### XML
 def LoadXMLFromFile():
     #fileName = 
@@ -62,19 +62,34 @@ def program_gui():
     SearchButton = Button(font = state_font, text="검색", command=partial(onSearch, sportscombo))
     SearchButton.place(x= 540, y = 45)
 
-    # # 스포츠 리스트 프레임
-    # global s_frame
-    # s_frame = Frame(root, borderwidth=12)
-    # s_frame.config(width=38, height=20)
-    # s_frame.place(x=20, y=80)
 
     # 스포츠 센터 리스트 박스
     global s_listbox
-    s_listbox = Listbox(root,borderwidth=12, relief='ridge')
+    s_frame = Frame(root)
+    s_frame.place(x = 20, y = 80)
+    s_scrollbar = Scrollbar(s_frame)
+    s_scrollbar.pack(side = "right", fill = "y")
+
+    s_listbox = Listbox(s_frame, borderwidth=12, relief='ridge', yscrollcommand = s_scrollbar.set)
     s_listbox.config(font = state_font, activestyle='none', selectmode = BROWSE)
-    s_listbox.config(width = 38, height = 20)
-    s_listbox.place(x = 20, y = 80)
+    s_listbox.config(width = 36, height = 20)
+    s_listbox.pack(side = "left")
+ 
     s_listbox.bind('<<ListboxSelect>>', event_for_listbox)    ## 고르면 리스트박스 이벤트 함수로
+
+    s_scrollbar.config(command= s_listbox.yview )
+
+
+#####
+    # s_scrollbar = Scrollbar(root)
+    # s_listbox = Listbox(root,borderwidth=12, relief='ridge', yscrollcommand = s_scrollbar.set)
+    # s_listbox.config(font = state_font, activestyle='none', selectmode = BROWSE)
+    # s_listbox.config(width = 36, height = 20)
+    # s_listbox.place(x = 20, y = 80)
+    # s_listbox.bind('<<ListboxSelect>>', event_for_listbox)    ## 고르면 리스트박스 이벤트 함수로
+    # s_scrollbar.config(command= s_listbox.yview )
+    # s_scrollbar.place( x= 297, y= 80)
+
 
     # 스포츠 센터 정보를 주는 리스트박스
     global info_listbox
@@ -88,9 +103,7 @@ def program_gui():
     # info_Text.config(wrap = 'c', font = state_font)
     # info_Text.config(width = 35, height = 21)
     # info_Text.place(x = 320, y = 80)
-
     # 캔버스 그리기
-    drawCanvas()
    
     # 메일 버튼
     
@@ -109,13 +122,13 @@ def event_for_listbox(event):
     global info_listbox
     info_listbox.delete(0,info_listbox.size())
     selection = event.widget.curselection()
-
-    global sport_num
-
-    find_in_dontselect = False                      # 선택 안 함에서 찾았는가?
-
     if selection:
         index = selection[0]
+        data = event.widget.get(index)
+        print(data)
+    
+    info_listbox.insert(1, data)
+    
         data = event.widget.get(index).split(':')
 
         if(sport_num != "선택안함"):
@@ -310,53 +323,89 @@ def onSearch(sports):
         pass
 # 검색 -> 스포츠
 def Searchsport(sport):
+    from xml.etree import ElementTree
+
+    global sportscombo
+
+    server = "openapi.gg.go.kr"
+
+    basket_conn = http.client.HTTPSConnection(server)
+    basket_conn.request(
+            "GET",
+            "/PublicLivelihood?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
+
+    foot_conn = http.client.HTTPSConnection(server)
+    foot_conn.request(
+            "GET",
+            "/PublicTrainingFacilitySoccer?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
+    
+    swim_conn = http.client.HTTPSConnection(server)
+    swim_conn.request(
+            "GET",
+            "/PublicSwimmingPool?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
+    
+    inside_conn = http.client.HTTPSConnection(server)
+    inside_conn.request(
+            "GET",
+            "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
+        
+
     global stateinput
     global s_listbox
-    global sport_num
 
     i = 1
 
-    if sport == "농구장":
-        sport_num = "농구"
-    elif sport == "축구장":
-        sport_num = "축구"
-    elif sport == "수영장":
-        sport_num = "수영"
-    elif sport == "실내스포츠(배드민턴, 탁구)":
-        sport_num = "실내"
-    else:
-        sport_num = "선택안함"
-
-
     # 농구 데이터-------------------------------------------------------------
-    bs_num = 0
-
     if(sport == "농구장" or sport == "선택안함"):
-        basket_elements = get_xml_basket()
+        bs_num = 0
+        basket_res = basket_conn.getresponse()
+
+        if int(basket_res.status) == 200:
+            #print("농구장 읽어 오는데 성공")
+            basket_strXml = basket_res.read().decode('utf-8')
+        else:
+            print('HTTP request failed : ', basket_res.reason)
+
+        basket_parseData = ElementTree.fromstring(basket_strXml)
+        basket_elements = basket_parseData.iter('row')
+
         for item in basket_elements: # " row“ element들
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
                 continue
-            _text = '[' + str(i) + ']:' + \
+            _text = '[' + str(i) + '] ' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ':' + getStr(item.find('SIGUN_NM').text)
+                ' , ' + getStr(item.find('SIGUN_NM').text)
             
             bs_num += 1
             s_listbox.insert(i-1,_text)
             i = i+1
     
     # 축구 데이터-------------------------------------------------------------
-    ft_num = 0
-
     if(sport == "축구장" or sport == "선택안함"):
-        foot_elements = get_xml_soccer()
+        ft_num = 0
+        foot_res = foot_conn.getresponse()
+
+        if int(foot_res.status) == 200:
+            #print("축구장 읽어 오는데 성공")
+            foot_strXml = foot_res.read().decode('utf-8')
+        else:
+            print('HTTP request failed : ', foot_res.reason)
+            
+        foot_parseData = ElementTree.fromstring(foot_strXml)
+        foot_elements = foot_parseData.iter('row')
+
         for item in foot_elements: # " row“ element들
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
                 continue
-            _text = '[' + str(i) + ']:' + \
+            _text = '[' + str(i) + '] ' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ':' + getStr(item.find('SIGUN_NM').text)
+                ' , ' + getStr(item.find('SIGUN_NM').text)
                 
             ft_num += 1
 
@@ -364,18 +413,27 @@ def Searchsport(sport):
             i = i+1
     
     # 수영 데이터-------------------------------------------------------------
-    sw_num = 0
-
     if(sport == "수영장" or sport == "선택안함"):
-        swim_elements = get_xml_swim()
+        sw_num = 0
+        swim_res = swim_conn.getresponse()
+
+        if int(swim_res.status) == 200:
+            #print("수영장 읽어 오는데 성공")
+            swim_strXml = swim_res.read().decode('utf-8')
+        else:
+            print('HTTP request failed : ', swim_res.reason)
+            
+        swim_parseData = ElementTree.fromstring(swim_strXml)
+    
+        swim_elements = swim_parseData.iter('row')
 
         for item in swim_elements: # " row“ element들
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
                 continue
-            _text = '[' + str(i) + ']:' + \
+            _text = '[' + str(i) + '] ' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ':' + getStr(item.find('SIGUN_NM').text)
+                ' , ' + getStr(item.find('SIGUN_NM').text)
                 
             sw_num += 1
 
@@ -383,17 +441,26 @@ def Searchsport(sport):
             i = i+1
     
     # 실내스포츠 데이터-------------------------------------------------------------
-    ins_num = 0
-
     if(sport == "실내스포츠(배드민턴, 탁구)" or sport == "선택안함"):
-        inside_elements = get_xml_inside()
+        ins_num = 0
+        inside_res = inside_conn.getresponse()
+
+        if int(inside_res.status) == 200:
+            #print("실내스포츠 읽어 오는데 성공")
+            inside_strXml = inside_res.read().decode('utf-8')
+        else:
+            print('HTTP request failed : ', inside_res.reason)
+            
+        inside_parseData = ElementTree.fromstring(inside_strXml)
+        inside_elements = inside_parseData.iter('row')
+
         for item in inside_elements: # " row“ element들
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
                 continue
-            _text = '[' + str(i) + ']:' + \
+            _text = '[' + str(i) + '] ' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ':' + getStr(item.find('SIGUN_NM').text)
+                ' , ' + getStr(item.find('SIGUN_NM').text)
                 
             ins_num += 1
 
@@ -412,31 +479,22 @@ def Searchsport(sport):
     drawGraph(sport, [{'name' : '농구', "value" : bs_num}, {'name' :'축구', "value" : ft_num},\
         {'name' :'수영', "value" : sw_num}, {'name' :'실내', "value" : ins_num}])
 
-# 캔버스 그리기
-def drawCanvas():
-    global canvas, canvasWidth, canvasHeight
-
-    canvasWidth = 460
-    canvasHeight = 250
-
-    canvas = Canvas(root, width=canvasWidth, height=canvasHeight, bg='white')
-    
-    canvas.place(x=20, y=400)
-
-    canvas.create_rectangle(20, 400, 460, 250, fill='white', tag="graph")
-
-
 # 그래프 그리는 함수
 def drawGraph(sport, data):
     # 그래프 크기는, [left, top, right, bottom] = [20, 400, 480, 650], 가로 = 460px, 세로 = 250px
-    global root, canvas, canvasWidth, canvasHeight
-
+    global root
     if(sport == "선택안함"):
-        canvas.delete("graph")
-
         nData = len(data)
         nMax = max(data, key=lambda x:x['value'])
         nMin = min(data, key=lambda x:x['value'])
+
+        canvasWidth = 460
+        canvasHeight = 250
+
+        canvas = Canvas(root, width=canvasWidth, height=canvasHeight, bg='white')
+        canvas.place(x=20, y=400)
+
+        canvas.create_rectangle(20, 400, 460, 250, fill='white', tag="graph")
 
         if nMax["value"] == 0:                           # 만약 데이터를 못 불러왔다면 끝낸다
             return
@@ -460,10 +518,8 @@ def drawGraph(sport, data):
 
             canvas.create_rectangle(left, top, right, bottom, fill=color, tag="graph")
 
-            canvas.create_text(left - 20, (top + bottom) // 2, text=data[i]["value"], tag="graph")
-            canvas.create_text(right + 20, (top + bottom) // 2, text=data[i]["name"], tag="graph")
-    else:
-        canvas.delete("graph")
+            canvas.create_text(left - 20, (top + bottom) // 2, text=data[i]["value"])
+            canvas.create_text(right + 20, (top + bottom) // 2, text=data[i]["name"])
 
 
 def getStr(s):
@@ -535,6 +591,8 @@ def main():
     win_text= tkinter.Label(root, text = "[체육시설검색프로그램]", font = font)
     win_text.pack()
     
+
+
     program_gui()
 
 
