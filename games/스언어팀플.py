@@ -131,7 +131,12 @@ def event_for_listbox(event):
             for item in elements:
                 name = item.find('FACLT_NM').text
                 if name == data[1]:
-                    print(data[1])
+                    _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
+                    _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
+                    _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
+                    _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
+                    _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
+                    _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
                     break
         
         # 선택 안 했다면 모든 xml에서 다 찾아
@@ -142,6 +147,12 @@ def event_for_listbox(event):
                 if name == data[1]:
                     print(data[1])
                     find_in_dontselect = True
+                    _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
+                    _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
+                    _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
+                    _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
+                    _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
+                    _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
                     break
             if(not find_in_dontselect):
                 elements = get_xml_soccer()
@@ -150,6 +161,12 @@ def event_for_listbox(event):
                     if name == data[1]:
                         print(data[1])
                         find_in_dontselect = True
+                        _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
+                        _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
+                        _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
+                        _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
+                        _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
+                        _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
                         break
             if(not find_in_dontselect):
                 elements = get_xml_swim()
@@ -158,6 +175,12 @@ def event_for_listbox(event):
                     if name == data[1]:
                         print(data[1])
                         find_in_dontselect = True
+                        _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
+                        _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
+                        _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
+                        _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
+                        _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
+                        _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
                         break
             if(not find_in_dontselect):
                 elements = get_xml_inside()
@@ -166,9 +189,20 @@ def event_for_listbox(event):
                     if name == data[1]:
                         print(data[1])
                         find_in_dontselect = True
+                        _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
+                        _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
+                        _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
+                        _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
+                        _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
+                        _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
                         break
     
-    info_listbox.insert(1, data)
+    info_listbox.insert(1, _text1)
+    info_listbox.insert(1, _text2)
+    info_listbox.insert(1, _text3)
+    info_listbox.insert(1, _text4)
+    info_listbox.insert(1, _text5)
+    info_listbox.insert(1, _text6)
 
 # 농구장 xml
 def get_xml_basket():
