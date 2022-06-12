@@ -129,6 +129,183 @@ def event_for_listbox(event):
     
     info_listbox.insert(1, data)
     
+        data = event.widget.get(index).split(':')
+
+        if(sport_num != "선택안함"):
+            if(sport_num == "농구"):
+                elements = get_xml_basket()
+            elif(sport_num == "축구"):
+                elements = get_xml_soccer()
+            elif(sport_num == "수영"):
+                elements = get_xml_swim()
+            elif(sport_num == "실내"):
+                elements = get_xml_inside()
+
+            for item in elements:
+                name = item.find('FACLT_NM').text
+                if name == data[1]:
+                    _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
+                    _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
+                    _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
+                    _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
+                    _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
+                    _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
+                    break
+        
+        # 선택 안 했다면 모든 xml에서 다 찾아
+        else:
+            elements = get_xml_basket()
+            for item in elements:
+                name = item.find('FACLT_NM').text
+                if name == data[1]:
+                    print(data[1])
+                    find_in_dontselect = True
+                    _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
+                    _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
+                    _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
+                    _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
+                    _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
+                    _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
+                    break
+            if(not find_in_dontselect):
+                elements = get_xml_soccer()
+                for item in elements:
+                    name = item.find('FACLT_NM').text
+                    if name == data[1]:
+                        print(data[1])
+                        find_in_dontselect = True
+                        _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
+                        _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
+                        _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
+                        _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
+                        _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
+                        _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
+                        break
+            if(not find_in_dontselect):
+                elements = get_xml_swim()
+                for item in elements:
+                    name = item.find('FACLT_NM').text
+                    if name == data[1]:
+                        print(data[1])
+                        find_in_dontselect = True
+                        _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
+                        _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
+                        _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
+                        _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
+                        _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
+                        _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
+                        break
+            if(not find_in_dontselect):
+                elements = get_xml_inside()
+                for item in elements:
+                    name = item.find('FACLT_NM').text
+                    if name == data[1]:
+                        print(data[1])
+                        find_in_dontselect = True
+                        _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
+                        _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
+                        _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
+                        _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
+                        _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
+                        _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
+                        break
+    
+    info_listbox.insert(1, _text1)
+    info_listbox.insert(1, _text2)
+    info_listbox.insert(1, _text3)
+    info_listbox.insert(1, _text4)
+    info_listbox.insert(1, _text5)
+    info_listbox.insert(1, _text6)
+
+# 농구장 xml
+def get_xml_basket():
+    from xml.etree import ElementTree
+
+    server = "openapi.gg.go.kr"
+    basket_conn = http.client.HTTPSConnection(server)
+    basket_conn.request(
+            "GET",
+            "/PublicLivelihood?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
+    basket_res = basket_conn.getresponse()
+
+    if int(basket_res.status) == 200:
+        basket_strXml = basket_res.read().decode('utf-8')
+    else:
+        print('HTTP request failed : ', basket_res.reason)
+
+    basket_parseData = ElementTree.fromstring(basket_strXml)
+    basket_elements = basket_parseData.iter('row')
+
+    return basket_elements
+
+# 축구장 xml
+def get_xml_soccer():
+    from xml.etree import ElementTree
+
+    server = "openapi.gg.go.kr"
+    foot_conn = http.client.HTTPSConnection(server)
+    foot_conn.request(
+            "GET",
+            "/PublicTrainingFacilitySoccer?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
+    foot_res = foot_conn.getresponse()
+
+    if int(foot_res.status) == 200:
+        foot_strXml = foot_res.read().decode('utf-8')
+    else:
+        print('HTTP request failed : ', foot_res.reason)
+            
+    foot_parseData = ElementTree.fromstring(foot_strXml)
+    foot_elements = foot_parseData.iter('row')
+
+    return foot_elements        
+
+# 수영장 xml
+def get_xml_swim():
+    from xml.etree import ElementTree
+
+    server = "openapi.gg.go.kr"
+    swim_conn = http.client.HTTPSConnection(server)
+    swim_conn.request(
+            "GET",
+            "/PublicSwimmingPool?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
+    swim_res = swim_conn.getresponse()
+
+    if int(swim_res.status) == 200:
+        swim_strXml = swim_res.read().decode('utf-8')
+    else:
+        print('HTTP request failed : ', swim_res.reason)
+            
+    swim_parseData = ElementTree.fromstring(swim_strXml)
+    swim_elements = swim_parseData.iter('row')
+
+    return swim_elements
+
+# 실내 스포츠 xml
+def get_xml_inside():
+    from xml.etree import ElementTree
+
+    server = "openapi.gg.go.kr"
+
+    inside_conn = http.client.HTTPSConnection(server)
+    inside_conn.request(
+            "GET",
+            "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
+    inside_res = inside_conn.getresponse()
+
+    if int(inside_res.status) == 200:
+        inside_strXml = inside_res.read().decode('utf-8')
+    else:
+        print('HTTP request failed : ', inside_res.reason)
+            
+    inside_parseData = ElementTree.fromstring(inside_strXml)
+    inside_elements = inside_parseData.iter('row')
+
+    return inside_elements
+
 
 # 검색 버튼 상호작용 함수
 def onSearch(sports):
