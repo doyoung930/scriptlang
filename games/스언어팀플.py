@@ -80,17 +80,6 @@ def program_gui():
     s_scrollbar.config(command= s_listbox.yview )
 
 
-#####
-    # s_scrollbar = Scrollbar(root)
-    # s_listbox = Listbox(root,borderwidth=12, relief='ridge', yscrollcommand = s_scrollbar.set)
-    # s_listbox.config(font = state_font, activestyle='none', selectmode = BROWSE)
-    # s_listbox.config(width = 36, height = 20)
-    # s_listbox.place(x = 20, y = 80)
-    # s_listbox.bind('<<ListboxSelect>>', event_for_listbox)    ## 고르면 리스트박스 이벤트 함수로
-    # s_scrollbar.config(command= s_listbox.yview )
-    # s_scrollbar.place( x= 297, y= 80)
-
-
     # 스포츠 센터 정보를 주는 리스트박스
     global info_listbox
     info_listbox = Listbox(root,borderwidth=12, relief='ridge')
@@ -98,12 +87,6 @@ def program_gui():
     info_listbox.config(width = 35, height = 20)
     info_listbox.place(x = 320 , y = 80)
 
-    # global info_Text
-    # info_Text = Text(root,borderwidth=12, relief='ridge')
-    # info_Text.config(wrap = 'c', font = state_font)
-    # info_Text.config(width = 35, height = 21)
-    # info_Text.place(x = 320, y = 80)
-    # 캔버스 그리기
    
     # 메일 버튼
     
@@ -134,14 +117,14 @@ def event_for_listbox(event):
         if(sport_num != "선택안함"):
             if(sport_num == "농구"):
                 elements = get_xml_basket()
-            elif(sport_num == "축구"):
+        elif(sport_num == "축구"):
                 elements = get_xml_soccer()
-            elif(sport_num == "수영"):
+        elif(sport_num == "수영"):
                 elements = get_xml_swim()
-            elif(sport_num == "실내"):
+        elif(sport_num == "실내"):
                 elements = get_xml_inside()
 
-            for item in elements:
+    for item in elements:
                 name = item.find('FACLT_NM').text
                 if name == data[1]:
                     _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
