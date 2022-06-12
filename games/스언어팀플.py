@@ -27,7 +27,7 @@ import tkintermapview
 ###
 ###
 ###
-
+ 
 ### XML
 def LoadXMLFromFile():
     #fileName = 
@@ -62,19 +62,34 @@ def program_gui():
     SearchButton = Button(font = state_font, text="검색", command=partial(onSearch, sportscombo))
     SearchButton.place(x= 540, y = 45)
 
-    # # 스포츠 리스트 프레임
-    # global s_frame
-    # s_frame = Frame(root, borderwidth=12)
-    # s_frame.config(width=38, height=20)
-    # s_frame.place(x=20, y=80)
 
     # 스포츠 센터 리스트 박스
     global s_listbox
-    s_listbox = Listbox(root,borderwidth=12, relief='ridge')
+    s_frame = Frame(root)
+    s_frame.place(x = 20, y = 80)
+    s_scrollbar = Scrollbar(s_frame)
+    s_scrollbar.pack(side = "right", fill = "y")
+
+    s_listbox = Listbox(s_frame, borderwidth=12, relief='ridge', yscrollcommand = s_scrollbar.set)
     s_listbox.config(font = state_font, activestyle='none', selectmode = BROWSE)
-    s_listbox.config(width = 38, height = 20)
-    s_listbox.place(x = 20, y = 80)
+    s_listbox.config(width = 36, height = 20)
+    s_listbox.pack(side = "left")
+ 
     s_listbox.bind('<<ListboxSelect>>', event_for_listbox)    ## 고르면 리스트박스 이벤트 함수로
+
+    s_scrollbar.config(command= s_listbox.yview )
+
+
+#####
+    # s_scrollbar = Scrollbar(root)
+    # s_listbox = Listbox(root,borderwidth=12, relief='ridge', yscrollcommand = s_scrollbar.set)
+    # s_listbox.config(font = state_font, activestyle='none', selectmode = BROWSE)
+    # s_listbox.config(width = 36, height = 20)
+    # s_listbox.place(x = 20, y = 80)
+    # s_listbox.bind('<<ListboxSelect>>', event_for_listbox)    ## 고르면 리스트박스 이벤트 함수로
+    # s_scrollbar.config(command= s_listbox.yview )
+    # s_scrollbar.place( x= 297, y= 80)
+
 
     # 스포츠 센터 정보를 주는 리스트박스
     global info_listbox
@@ -235,6 +250,7 @@ def Searchsport(sport):
             print('HTTP request failed : ', swim_res.reason)
             
         swim_parseData = ElementTree.fromstring(swim_strXml)
+    
         swim_elements = swim_parseData.iter('row')
 
         for item in swim_elements: # " row“ element들
@@ -401,6 +417,8 @@ def main():
     win_text= tkinter.Label(root, text = "[체육시설검색프로그램]", font = font)
     win_text.pack()
     
+
+
     program_gui()
 
 
