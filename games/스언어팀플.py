@@ -106,6 +106,27 @@ def program_gui():
 
 # #리스트 박스 이벤트
 def event_for_listbox(event):
+    elements = get_xml_swim()
+
+    global info_listbox
+
+    info_listbox.delete(0,info_listbox.size())
+    
+    selection = event.widget.curselection()
+    
+    if selection:
+        index = selection[0]
+        data = event.widget.get(index).split(':')
+
+        for item in elements:
+            sw_name = item.find('FACLT_NM').text
+            if sw_name == data[1]:
+                print(data[1])
+    
+    info_listbox.insert(1, data)
+
+# 수영장 xml
+def get_xml_swim():
     from xml.etree import ElementTree
 
     server = "openapi.gg.go.kr"
@@ -125,23 +146,7 @@ def event_for_listbox(event):
     swim_parseData = ElementTree.fromstring(swim_strXml)
     swim_elements = swim_parseData.iter('row')
 
-    global info_listbox
-
-    info_listbox.delete(0,info_listbox.size())
-    
-    selection = event.widget.curselection()
-    
-    if selection:
-        index = selection[0]
-        data = event.widget.get(index).split(':')
-
-        for item in swim_elements:
-            sw_name = item.find('FACLT_NM').text
-            if sw_name == data[1]:
-                print(data[1])
-    
-    info_listbox.insert(1, data)
-    
+    return swim_elements
 
 # 검색 버튼 상호작용 함수
 def onSearch(sports):
@@ -179,18 +184,11 @@ def Searchsport(sport):
             "/PublicTrainingFacilitySoccer?KEY=3cccb5986c79462dae3acd235fa8a54f"
         )
     
-    swim_conn = http.client.HTTPSConnection(server)
-    swim_conn.request(
-            "GET",
-            "/PublicSwimmingPool?KEY=3cccb5986c79462dae3acd235fa8a54f"
-        )
-    
     inside_conn = http.client.HTTPSConnection(server)
     inside_conn.request(
             "GET",
             "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
         )
-        
 
     global stateinput
     global s_listbox
@@ -256,17 +254,8 @@ def Searchsport(sport):
     sw_num = 0
 
     if(sport == "수영장" or sport == "선택안함"):
-        swim_res = swim_conn.getresponse()
-
-        if int(swim_res.status) == 200:
-            #print("수영장 읽어 오는데 성공")
-            swim_strXml = swim_res.read().decode('utf-8')
-        else:
-            print('HTTP request failed : ', swim_res.reason)
-            
-        swim_parseData = ElementTree.fromstring(swim_strXml)
-        swim_elements = swim_parseData.iter('row')
-
+        swim_elements = get_xml_swim()
+        
         for item in swim_elements: # " row“ element들
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
