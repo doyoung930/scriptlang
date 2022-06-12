@@ -8,10 +8,10 @@ from datetime import date, datetime
 
 import noti
 
-# date_param: 날짜, user: 사용자ID, loc_param:지역코드
-def replyAptData(date_param, user, loc_param='11710'):
-    print(user, date_param, loc_param) 
-    res_list = noti.getData( loc_param, date_param )
+# sport_param: 스포츠 종류, user: 사용자ID, loc_param = 지역 이름
+def replyAptData(sport_param, user, loc_param):
+    print(user, sport_param, loc_param) 
+    res_list = noti.getData( loc_param, sport_param )
 
     # 하나씩 보내면 메세지 개수가 너무 많아지므로
     # 300자까지는 하나의 메세지로 묶어서 보내기.
@@ -29,30 +29,32 @@ def replyAptData(date_param, user, loc_param='11710'):
     if msg:
         noti.sendMessage( user, msg )
     else:
-        noti.sendMessage( user, '%s 기간에 해당하는 데이터가 없습니다.'%date_param)
+        noti.sendMessage( user, '이 지역에는 공용 체육시설 데이터가 없습니다.')
 
 def save( user, loc_param ):
-    conn = sqlite3.connect('users.db')
-    cursor = conn.cursor()
-    cursor.execute('CREATE TABLE IF NOT EXISTS \
-        users( user TEXT, location TEXT, PRIMARY KEY(user, location) )')
-    try:
-        cursor.execute('INSERT INTO users(user, location) VALUES ("%s", "%s")' % (user, loc_param))
-    except sqlite3.IntegrityError:
-        noti.sendMessage( user, '이미 해당 정보가 저장되어 있습니다.' )
-        return
-    else: noti.sendMessage( user, '저장되었습니다.' )
-    conn.commit()
+    # conn = sqlite3.connect('users.db')
+    # cursor = conn.cursor()
+    # cursor.execute('CREATE TABLE IF NOT EXISTS \
+    #     users( user TEXT, location TEXT, PRIMARY KEY(user, location) )')
+    # try:
+    #     cursor.execute('INSERT INTO users(user, location) VALUES ("%s", "%s")' % (user, loc_param))
+    # except sqlite3.IntegrityError:
+    #     noti.sendMessage( user, '이미 해당 정보가 저장되어 있습니다.' )
+    #     return
+    # else: noti.sendMessage( user, '저장되었습니다.' )
+    # conn.commit()
+    pass
 
 def check( user ):
-    conn = sqlite3.connect('users.db')
-    cursor = conn.cursor()
-    cursor.execute('CREATE TABLE IF NOT EXISTS users( user TEXT, locationTEXT, PRIMARY KEY(user, location) )')
-    cursor.execute('SELECT * from users WHERE user="%s"' % user)
+    # conn = sqlite3.connect('users.db')
+    # cursor = conn.cursor()
+    # cursor.execute('CREATE TABLE IF NOT EXISTS users( user TEXT, locationTEXT, PRIMARY KEY(user, location) )')
+    # cursor.execute('SELECT * from users WHERE user="%s"' % user)
 
-    for data in cursor.fetchall():
-        row = 'id:' + str(data[0]) + ', location:' + data[1]
-        noti.sendMessage( user, row )
+    # for data in cursor.fetchall():
+    #     row = 'id:' + str(data[0]) + ', location:' + data[1]
+    #     noti.sendMessage( user, row )
+    pass
 
 def handle(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
@@ -64,27 +66,32 @@ def handle(msg):
     text = msg['text']
     args = text.split(' ')
 
-    if text.startswith('거래') and len(args)>1:
-        print('try to 거래', args[1])
-        replyAptData( args[1], chat_id, args[2] )
-    elif text.startswith('지역') and len(args)>1:
-        print('try to 지역', args[1])
-        replyAptData( '202205', chat_id, args[1] )
-    elif text.startswith('저장') and len(args)>1:
-        print('try to 저장', args[1])
-        save( chat_id, args[1] )
-    elif text.startswith('확인'):
-        print('try to 확인')
-        check( chat_id )
+    if text.startswith('농구') and len(args)>1:
+        print('try to 농구', args[1])
+        replyAptData( args[0], chat_id, args[1] )
+    elif text.startswith('축구') and len(args)>1:
+        print('try to 축구', args[1])
+        replyAptData( args[0], chat_id, args[1] )
+    elif text.startswith('수영') and len(args)>1:
+        print('try to 수영', args[1])
+        replyAptData( args[0], chat_id, args[1] )
+    elif text.startswith('실내') and len(args)>1:
+        print('try to 실내', args[1])
+        replyAptData( args[0], chat_id, args[1] )
+    # elif text.startswith('지역') and len(args)>1:
+    #     print('try to 지역', args[1])
+    #     replyAptData( '202205', chat_id, args[1] )
+    # elif text.startswith('저장') and len(args)>1:
+    #     print('try to 저장', args[1])
+    #     save( chat_id, args[1] )
+    # elif text.startswith('확인'):
+    #     print('try to 확인')
+    #     check( chat_id )
     else:
-        noti.sendMessage(chat_id, '''모르는 명령어입니다.\n거래 [YYYYMM] [지역번호]
-        \n지역 [지역번호]\n저장 [지역번호]\n확인 중 하나의 명령을 입력하세요.\n
-        지역 ["종로구 11110", "중구 11140", "용산구 11170", "성동구 11200", "광진구
-        11215", "동대문구 11230", "중랑구 11260", "성북구 11290", "강북구 11305",
-        "도봉구 11320", "노원구 11350", "은평구 11380", "서대문구 11410", "마포구11440",
-        "양천구 11470", "강서구 11500", "구로구 11530", "금천구 11545",
-        "영등포구 11560", "동작구 11590", "관악구 11620", "서초구 11650", "강남구
-        11680", "송파구 11710", "강동구 11740"]
+        noti.sendMessage(chat_id, '''모르는 명령어 입니다.\n[원하는 스포츠] [지역 이름]을 입력하세요.
+        \n스포츠 종류 : 농구, 축구, 수영, 실내 스포츠.
+        \n지역 이름을 입력할 땐 시/군을 명시해주세요.
+        \n\n예시 : 농구 파주시, 축구 평택시
         ''')
 
 today = date.today()
