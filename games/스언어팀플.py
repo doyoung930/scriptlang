@@ -27,7 +27,7 @@ import tkintermapview
 ###
 ###
 ###
- 
+
 ### XML
 def LoadXMLFromFile():
     #fileName = 
@@ -62,8 +62,13 @@ def program_gui():
     SearchButton = Button(font = state_font, text="검색", command=partial(onSearch, sportscombo))
     SearchButton.place(x= 540, y = 45)
 
+    # # 스포츠 리스트 프레임
+    # global s_frame
+    # s_frame = Frame(root, borderwidth=12)
+    # s_frame.config(width=38, height=20)
+    # s_frame.place(x=20, y=80)
 
-    # 스포츠 센터 리스트 박스
+        # 스포츠 센터 리스트 박스
     global s_listbox
     s_frame = Frame(root)
     s_frame.place(x = 20, y = 80)
@@ -78,8 +83,6 @@ def program_gui():
     s_listbox.bind('<<ListboxSelect>>', event_for_listbox)    ## 고르면 리스트박스 이벤트 함수로
 
     s_scrollbar.config(command= s_listbox.yview )
-
-
     # 스포츠 센터 정보를 주는 리스트박스
     global info_listbox
     info_listbox = Listbox(root,borderwidth=12, relief='ridge')
@@ -87,6 +90,14 @@ def program_gui():
     info_listbox.config(width = 35, height = 20)
     info_listbox.place(x = 320 , y = 80)
 
+    # global info_Text
+    # info_Text = Text(root,borderwidth=12, relief='ridge')
+    # info_Text.config(wrap = 'c', font = state_font)
+    # info_Text.config(width = 35, height = 21)
+    # info_Text.place(x = 320, y = 80)
+
+    # 캔버스 그리기
+    drawCanvas()
    
     # 메일 버튼
     
@@ -105,34 +116,34 @@ def event_for_listbox(event):
     global info_listbox
     info_listbox.delete(0,info_listbox.size())
     selection = event.widget.curselection()
+
+    global sport_num
+
+    find_in_dontselect = False                      # 선택 안 함에서 찾았는가?
+
     if selection:
         index = selection[0]
-        data = event.widget.get(index)
-        print(data)
-    
-    info_listbox.insert(1, data)
-    
         data = event.widget.get(index).split(':')
 
         if(sport_num != "선택안함"):
             if(sport_num == "농구"):
                 elements = get_xml_basket()
-        elif(sport_num == "축구"):
+            elif(sport_num == "축구"):
                 elements = get_xml_soccer()
-        elif(sport_num == "수영"):
+            elif(sport_num == "수영"):
                 elements = get_xml_swim()
-        elif(sport_num == "실내"):
+            elif(sport_num == "실내"):
                 elements = get_xml_inside()
 
-    for item in elements:
+            for item in elements:
                 name = item.find('FACLT_NM').text
                 if name == data[1]:
                     _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
                     _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
-                    _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
-                    _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
-                    _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
-                    _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
+                    _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR').text)
+                    _text4 = "연락처 : " + getStr(item.find('CONTCT_NO').text)
+                    _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
+                    _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
                     break
         
         # 선택 안 했다면 모든 xml에서 다 찾아
@@ -141,64 +152,60 @@ def event_for_listbox(event):
             for item in elements:
                 name = item.find('FACLT_NM').text
                 if name == data[1]:
-                    print(data[1])
                     find_in_dontselect = True
                     _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
                     _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
-                    _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
-                    _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
-                    _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
-                    _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
+                    _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR').text)
+                    _text4 = "연락처 : " + getStr(item.find('CONTCT_NO').text)
+                    _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
+                    _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
                     break
             if(not find_in_dontselect):
                 elements = get_xml_soccer()
                 for item in elements:
                     name = item.find('FACLT_NM').text
                     if name == data[1]:
-                        print(data[1])
                         find_in_dontselect = True
                         _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
                         _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
-                        _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
-                        _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
-                        _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
-                        _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
+                        _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR').text)
+                        _text4 = "연락처 : " + getStr(item.find('CONTCT_NO').text)
+                        _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
+                        _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
                         break
             if(not find_in_dontselect):
                 elements = get_xml_swim()
                 for item in elements:
                     name = item.find('FACLT_NM').text
                     if name == data[1]:
-                        print(data[1])
                         find_in_dontselect = True
                         _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
                         _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
-                        _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
-                        _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
-                        _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
-                        _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
+                        _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR').text)
+                        _text4 = "연락처 : " + getStr(item.find('CONTCT_NO').text)
+                        _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
+                        _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
                         break
             if(not find_in_dontselect):
                 elements = get_xml_inside()
                 for item in elements:
                     name = item.find('FACLT_NM').text
                     if name == data[1]:
-                        print(data[1])
                         find_in_dontselect = True
                         _text1 = "시설명 : " + getStr(item.find('FACLT_NM').text)
                         _text2 ='시군명 : ' + getStr(item.find('SIGUN_NM').text)
-                        _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR'))
-                        _text4 = "연락처 : " + getStr(item.find('CONTCT_NO'))
-                        _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR'))
-                        _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR'))
+                        _text3 ="도로명 주소 : " + getStr(item.find('REFINE_ROADNM_ADDR').text)
+                        _text4 = "연락처 : " + getStr(item.find('CONTCT_NO').text)
+                        _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
+                        _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
                         break
     
-    info_listbox.insert(1, _text1)
-    info_listbox.insert(1, _text2)
-    info_listbox.insert(1, _text3)
-    info_listbox.insert(1, _text4)
-    info_listbox.insert(1, _text5)
-    info_listbox.insert(1, _text6)
+        info_listbox.insert(1, _text1)
+        info_listbox.insert(1, _text2)
+        info_listbox.insert(1, _text3)
+        info_listbox.insert(1, _text4)
+        info_listbox.insert(1, _text5)
+        info_listbox.insert(1, _text6)
 
 # 농구장 xml
 def get_xml_basket():
@@ -310,89 +317,53 @@ def onSearch(sports):
         pass
 # 검색 -> 스포츠
 def Searchsport(sport):
-    from xml.etree import ElementTree
-
-    global sportscombo
-
-    server = "openapi.gg.go.kr"
-
-    basket_conn = http.client.HTTPSConnection(server)
-    basket_conn.request(
-            "GET",
-            "/PublicLivelihood?KEY=3cccb5986c79462dae3acd235fa8a54f"
-        )
-
-    foot_conn = http.client.HTTPSConnection(server)
-    foot_conn.request(
-            "GET",
-            "/PublicTrainingFacilitySoccer?KEY=3cccb5986c79462dae3acd235fa8a54f"
-        )
-    
-    swim_conn = http.client.HTTPSConnection(server)
-    swim_conn.request(
-            "GET",
-            "/PublicSwimmingPool?KEY=3cccb5986c79462dae3acd235fa8a54f"
-        )
-    
-    inside_conn = http.client.HTTPSConnection(server)
-    inside_conn.request(
-            "GET",
-            "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
-        )
-        
-
     global stateinput
     global s_listbox
+    global sport_num
 
     i = 1
 
+    if sport == "농구장":
+        sport_num = "농구"
+    elif sport == "축구장":
+        sport_num = "축구"
+    elif sport == "수영장":
+        sport_num = "수영"
+    elif sport == "실내스포츠(배드민턴, 탁구)":
+        sport_num = "실내"
+    else:
+        sport_num = "선택안함"
+
+
     # 농구 데이터-------------------------------------------------------------
+    bs_num = 0
+
     if(sport == "농구장" or sport == "선택안함"):
-        bs_num = 0
-        basket_res = basket_conn.getresponse()
-
-        if int(basket_res.status) == 200:
-            #print("농구장 읽어 오는데 성공")
-            basket_strXml = basket_res.read().decode('utf-8')
-        else:
-            print('HTTP request failed : ', basket_res.reason)
-
-        basket_parseData = ElementTree.fromstring(basket_strXml)
-        basket_elements = basket_parseData.iter('row')
-
+        basket_elements = get_xml_basket()
         for item in basket_elements: # " row“ element들
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
                 continue
-            _text = '[' + str(i) + '] ' + \
+            _text = '[' + str(i) + ']:' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ' , ' + getStr(item.find('SIGUN_NM').text)
+                ':' + getStr(item.find('SIGUN_NM').text)
             
             bs_num += 1
             s_listbox.insert(i-1,_text)
             i = i+1
     
     # 축구 데이터-------------------------------------------------------------
+    ft_num = 0
+
     if(sport == "축구장" or sport == "선택안함"):
-        ft_num = 0
-        foot_res = foot_conn.getresponse()
-
-        if int(foot_res.status) == 200:
-            #print("축구장 읽어 오는데 성공")
-            foot_strXml = foot_res.read().decode('utf-8')
-        else:
-            print('HTTP request failed : ', foot_res.reason)
-            
-        foot_parseData = ElementTree.fromstring(foot_strXml)
-        foot_elements = foot_parseData.iter('row')
-
+        foot_elements = get_xml_soccer()
         for item in foot_elements: # " row“ element들
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
                 continue
-            _text = '[' + str(i) + '] ' + \
+            _text = '[' + str(i) + ']:' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ' , ' + getStr(item.find('SIGUN_NM').text)
+                ':' + getStr(item.find('SIGUN_NM').text)
                 
             ft_num += 1
 
@@ -400,27 +371,18 @@ def Searchsport(sport):
             i = i+1
     
     # 수영 데이터-------------------------------------------------------------
-    if(sport == "수영장" or sport == "선택안함"):
-        sw_num = 0
-        swim_res = swim_conn.getresponse()
+    sw_num = 0
 
-        if int(swim_res.status) == 200:
-            #print("수영장 읽어 오는데 성공")
-            swim_strXml = swim_res.read().decode('utf-8')
-        else:
-            print('HTTP request failed : ', swim_res.reason)
-            
-        swim_parseData = ElementTree.fromstring(swim_strXml)
-    
-        swim_elements = swim_parseData.iter('row')
+    if(sport == "수영장" or sport == "선택안함"):
+        swim_elements = get_xml_swim()
 
         for item in swim_elements: # " row“ element들
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
                 continue
-            _text = '[' + str(i) + '] ' + \
+            _text = '[' + str(i) + ']:' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ' , ' + getStr(item.find('SIGUN_NM').text)
+                ':' + getStr(item.find('SIGUN_NM').text)
                 
             sw_num += 1
 
@@ -428,26 +390,17 @@ def Searchsport(sport):
             i = i+1
     
     # 실내스포츠 데이터-------------------------------------------------------------
+    ins_num = 0
+
     if(sport == "실내스포츠(배드민턴, 탁구)" or sport == "선택안함"):
-        ins_num = 0
-        inside_res = inside_conn.getresponse()
-
-        if int(inside_res.status) == 200:
-            #print("실내스포츠 읽어 오는데 성공")
-            inside_strXml = inside_res.read().decode('utf-8')
-        else:
-            print('HTTP request failed : ', inside_res.reason)
-            
-        inside_parseData = ElementTree.fromstring(inside_strXml)
-        inside_elements = inside_parseData.iter('row')
-
+        inside_elements = get_xml_inside()
         for item in inside_elements: # " row“ element들
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
                 continue
-            _text = '[' + str(i) + '] ' + \
+            _text = '[' + str(i) + ']:' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ' , ' + getStr(item.find('SIGUN_NM').text)
+                ':' + getStr(item.find('SIGUN_NM').text)
                 
             ins_num += 1
 
@@ -466,22 +419,31 @@ def Searchsport(sport):
     drawGraph(sport, [{'name' : '농구', "value" : bs_num}, {'name' :'축구', "value" : ft_num},\
         {'name' :'수영', "value" : sw_num}, {'name' :'실내', "value" : ins_num}])
 
+# 캔버스 그리기
+def drawCanvas():
+    global canvas, canvasWidth, canvasHeight
+
+    canvasWidth = 460
+    canvasHeight = 250
+
+    canvas = Canvas(root, width=canvasWidth, height=canvasHeight, bg='white')
+    
+    canvas.place(x=20, y=400)
+
+    canvas.create_rectangle(20, 400, 460, 250, fill='white', tag="graph")
+
+
 # 그래프 그리는 함수
 def drawGraph(sport, data):
     # 그래프 크기는, [left, top, right, bottom] = [20, 400, 480, 650], 가로 = 460px, 세로 = 250px
-    global root
+    global root, canvas, canvasWidth, canvasHeight
+
     if(sport == "선택안함"):
+        canvas.delete("graph")
+
         nData = len(data)
         nMax = max(data, key=lambda x:x['value'])
         nMin = min(data, key=lambda x:x['value'])
-
-        canvasWidth = 460
-        canvasHeight = 250
-
-        canvas = Canvas(root, width=canvasWidth, height=canvasHeight, bg='white')
-        canvas.place(x=20, y=400)
-
-        canvas.create_rectangle(20, 400, 460, 250, fill='white', tag="graph")
 
         if nMax["value"] == 0:                           # 만약 데이터를 못 불러왔다면 끝낸다
             return
@@ -505,8 +467,10 @@ def drawGraph(sport, data):
 
             canvas.create_rectangle(left, top, right, bottom, fill=color, tag="graph")
 
-            canvas.create_text(left - 20, (top + bottom) // 2, text=data[i]["value"])
-            canvas.create_text(right + 20, (top + bottom) // 2, text=data[i]["name"])
+            canvas.create_text(left - 20, (top + bottom) // 2, text=data[i]["value"], tag="graph")
+            canvas.create_text(right + 20, (top + bottom) // 2, text=data[i]["name"], tag="graph")
+    else:
+        canvas.delete("graph")
 
 
 def getStr(s):
@@ -578,8 +542,6 @@ def main():
     win_text= tkinter.Label(root, text = "[체육시설검색프로그램]", font = font)
     win_text.pack()
     
-
-
     program_gui()
 
 
