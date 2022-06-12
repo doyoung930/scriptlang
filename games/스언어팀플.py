@@ -106,22 +106,67 @@ def program_gui():
 
 # #리스트 박스 이벤트
 def event_for_listbox(event):
-    elements = get_xml_swim()
-
     global info_listbox
-
     info_listbox.delete(0,info_listbox.size())
-    
     selection = event.widget.curselection()
-    
+
+    global sport_num
+
+    find_in_dontselect = False                      # 선택 안 함에서 찾았는가?
+
     if selection:
         index = selection[0]
         data = event.widget.get(index).split(':')
 
-        for item in elements:
-            sw_name = item.find('FACLT_NM').text
-            if sw_name == data[1]:
-                print(data[1])
+        if(sport_num != "선택안함"):
+            if(sport_num == "농구"):
+                elements = get_xml_basket()
+            elif(sport_num == "축구"):
+                elements = get_xml_soccer()
+            elif(sport_num == "수영"):
+                elements = get_xml_swim()
+            elif(sport_num == "실내"):
+                elements = get_xml_inside()
+
+            for item in elements:
+                name = item.find('FACLT_NM').text
+                if name == data[1]:
+                    print(data[1])
+                    break
+        
+        # 선택 안 했다면 모든 xml에서 다 찾아
+        else:
+            elements = get_xml_basket()
+            for item in elements:
+                name = item.find('FACLT_NM').text
+                if name == data[1]:
+                    print(data[1])
+                    find_in_dontselect = True
+                    break
+            if(not find_in_dontselect):
+                elements = get_xml_soccer()
+                for item in elements:
+                    name = item.find('FACLT_NM').text
+                    if name == data[1]:
+                        print(data[1])
+                        find_in_dontselect = True
+                        break
+            if(not find_in_dontselect):
+                elements = get_xml_swim()
+                for item in elements:
+                    name = item.find('FACLT_NM').text
+                    if name == data[1]:
+                        print(data[1])
+                        find_in_dontselect = True
+                        break
+            if(not find_in_dontselect):
+                elements = get_xml_inside()
+                for item in elements:
+                    name = item.find('FACLT_NM').text
+                    if name == data[1]:
+                        print(data[1])
+                        find_in_dontselect = True
+                        break
     
     info_listbox.insert(1, data)
 
@@ -237,8 +282,21 @@ def onSearch(sports):
 def Searchsport(sport):
     global stateinput
     global s_listbox
+    global sport_num
 
     i = 1
+
+    if sport == "농구장":
+        sport_num = "농구"
+    elif sport == "축구장":
+        sport_num = "축구"
+    elif sport == "수영장":
+        sport_num = "수영"
+    elif sport == "실내스포츠(배드민턴, 탁구)":
+        sport_num = "실내"
+    else:
+        sport_num = "선택안함"
+
 
     # 농구 데이터-------------------------------------------------------------
     bs_num = 0
@@ -249,9 +307,9 @@ def Searchsport(sport):
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
                 continue
-            _text = '[' + str(i) + '] ' + \
+            _text = '[' + str(i) + ']:' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ' , ' + getStr(item.find('SIGUN_NM').text)
+                ':' + getStr(item.find('SIGUN_NM').text)
             
             bs_num += 1
             s_listbox.insert(i-1,_text)
@@ -266,9 +324,9 @@ def Searchsport(sport):
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
                 continue
-            _text = '[' + str(i) + '] ' + \
+            _text = '[' + str(i) + ']:' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ' , ' + getStr(item.find('SIGUN_NM').text)
+                ':' + getStr(item.find('SIGUN_NM').text)
                 
             ft_num += 1
 
@@ -303,9 +361,9 @@ def Searchsport(sport):
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
                 continue
-            _text = '[' + str(i) + '] ' + \
+            _text = '[' + str(i) + ']:' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ' , ' + getStr(item.find('SIGUN_NM').text)
+                ':' + getStr(item.find('SIGUN_NM').text)
                 
             ins_num += 1
 
