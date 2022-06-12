@@ -16,6 +16,13 @@ import tkinter.ttk as ttk
 import tkinter.font
 from PIL import ImageTk
 
+#mail
+#gmail_htmlsend.py
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+##gmail_send.py
+from email.mime.text import MIMEText
 
 # Button에 패러매터를 주기 위한 모듈
 from functools import partial
@@ -24,6 +31,8 @@ import tkinter
 #지도
 import tkintermapview
 
+#메세지 박스
+from tkinter import messagebox
 ###
 ###
 ###
@@ -83,6 +92,7 @@ def program_gui():
     s_listbox.bind('<<ListboxSelect>>', event_for_listbox)    ## 고르면 리스트박스 이벤트 함수로
 
     s_scrollbar.config(command= s_listbox.yview )
+
     # 스포츠 센터 정보를 주는 리스트박스
     global info_listbox
     info_listbox = Listbox(root,borderwidth=12, relief='ridge')
@@ -201,11 +211,11 @@ def event_for_listbox(event):
                         break
     
         info_listbox.insert(1, _text1)
-        info_listbox.insert(1, _text2)
-        info_listbox.insert(1, _text3)
-        info_listbox.insert(1, _text4)
-        info_listbox.insert(1, _text5)
-        info_listbox.insert(1, _text6)
+        info_listbox.insert(2, _text2)
+        info_listbox.insert(3, _text3)
+        info_listbox.insert(4, _text4)
+        info_listbox.insert(5, _text5)
+        info_listbox.insert(6, _text6)
 
 # 농구장 xml
 def get_xml_basket():
@@ -476,15 +486,6 @@ def drawGraph(sport, data):
 def getStr(s):
     return '' if not s else s
 
-### UIR 생성 함수
-# def userURIBuilder(uri, **user):
-#     str = uri +"?"
-#     for key in user.keys():
-#         str += key + "=" + user[key] + "&"
-#     return str
-
-
-
 #지도로 이동
 def sports_map():
     global location
@@ -501,9 +502,13 @@ def sports_map():
     map_widget.set_position(37.012603584211, 127.32631686988)
     map_widget.set_address("경기 안성시 보개면 종합운동장로 162", marker=True)
     map_widget.set_zoom(15)
+
+
+
 #이메일 보내기
 def Send_email():
     global mail
+    global mailinput
     mail = tkinter.Toplevel()
     mail.geometry ("350x100+650+400")
     mail.title("메일")
@@ -513,15 +518,61 @@ def Send_email():
     
     mail_text= tkinter.Label(mail, text = "[메일 전송]", font = mail_font)
     mail_text.pack()
-        # 지역 검색박스
+    
+    # 지역 검색박스
     mailinput = ttk.Entry( mail,font = s_mail_font)
     mailinput.config(width = 22)
     mailinput.pack()
     
-    #검색 버튼
+        #검색 버튼
     global SearchButton
-    SearchButton = Button(mail, font = s_mail_font, text="전송")
+    SearchButton = Button(mail, font = s_mail_font, text="전송", command=partial(sendMail) )
     SearchButton.pack()
+
+
+
+# 이메일 보내기
+def sendMail():
+    global senderAddr
+    global recipientAddr
+    global msg 
+    global mailinput
+    global mail
+    global info_listbox
+    
+    senderAddr = "doyoung930@gmail.com"
+    recipientAddr = mailinput.get()
+
+    body =info_listbox.get(0)+"\n"+ info_listbox.get(1) +"\n" + info_listbox.get(2)+"\n" + info_listbox.get(3)+"\n" + info_listbox.get(4)+"\n"+ info_listbox.get(5)+"\n"+ info_listbox.get(6)
+    msg = MIMEText(body)
+    msg['Subject'] = "체육시설 정보"
+    msg['From'] = senderAddr
+    msg['To'] = recipientAddr
+
+
+    import smtplib # 파이썬의 SMTP 모듈
+# 메일 서버와 connect하고 통신 시작
+    s = smtplib.SMTP("smtp.gmail.com", 587) 
+# SMTP 서버와 연결
+    s.starttls() 
+# 앱 password 이용
+    s.login('doyoung930@gmail.com', 'rjsqqhispyapkuwc')
+    s.sendmail(senderAddr , [recipientAddr], msg.as_string())
+    s.close()
+    mail.destroy()
+    messagebox.showinfo("메일", "메일이 성공적으로 보내졌습니다.")
+    
+
+
+
+
+
+
+
+
+
+
+
 ##############
 def main():
 ##############s
