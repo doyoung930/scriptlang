@@ -106,13 +106,39 @@ def program_gui():
 
 # #리스트 박스 이벤트
 def event_for_listbox(event):
+    from xml.etree import ElementTree
+
+    server = "openapi.gg.go.kr"
+    swim_conn = http.client.HTTPSConnection(server)
+    swim_conn.request(
+            "GET",
+            "/PublicSwimmingPool?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
+    swim_res = swim_conn.getresponse()
+
+    if int(swim_res.status) == 200:
+    #print("수영장 읽어 오는데 성공")
+        swim_strXml = swim_res.read().decode('utf-8')
+    else:
+        print('HTTP request failed : ', swim_res.reason)
+            
+    swim_parseData = ElementTree.fromstring(swim_strXml)
+    swim_elements = swim_parseData.iter('row')
+
     global info_listbox
+
     info_listbox.delete(0,info_listbox.size())
+    
     selection = event.widget.curselection()
+    
     if selection:
         index = selection[0]
-        data = event.widget.get(index)
-        print(data)
+        data = event.widget.get(index).split(':')
+
+        for item in swim_elements:
+            sw_name = item.find('FACLT_NM').text
+            if sw_name == data[1]:
+                print(data[1])
     
     info_listbox.insert(1, data)
     
@@ -138,8 +164,6 @@ def onSearch(sports):
 # 검색 -> 스포츠
 def Searchsport(sport):
     from xml.etree import ElementTree
-
-    global sportscombo
 
     server = "openapi.gg.go.kr"
 
@@ -247,9 +271,9 @@ def Searchsport(sport):
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
                 continue
-            _text = '[' + str(i) + '] ' + \
+            _text = '[' + str(i) + ']:' + \
                 getStr(item.find('FACLT_NM').text) + \
-                ' , ' + getStr(item.find('SIGUN_NM').text)
+                ':' + getStr(item.find('SIGUN_NM').text)
                 
             sw_num += 1
 
@@ -296,6 +320,7 @@ def Searchsport(sport):
     drawGraph(sport, [{'name' : '농구', "value" : bs_num}, {'name' :'축구', "value" : ft_num},\
         {'name' :'수영', "value" : sw_num}, {'name' :'실내', "value" : ins_num}])
 
+# 캔버스 그리기
 def drawCanvas():
     global canvas, canvasWidth, canvasHeight
 
