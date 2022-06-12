@@ -125,6 +125,50 @@ def event_for_listbox(event):
     
     info_listbox.insert(1, data)
 
+# 농구장 xml
+def get_xml_basket():
+    from xml.etree import ElementTree
+
+    server = "openapi.gg.go.kr"
+    basket_conn = http.client.HTTPSConnection(server)
+    basket_conn.request(
+            "GET",
+            "/PublicLivelihood?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
+    basket_res = basket_conn.getresponse()
+
+    if int(basket_res.status) == 200:
+        basket_strXml = basket_res.read().decode('utf-8')
+    else:
+        print('HTTP request failed : ', basket_res.reason)
+
+    basket_parseData = ElementTree.fromstring(basket_strXml)
+    basket_elements = basket_parseData.iter('row')
+
+    return basket_elements
+
+# 축구장 xml
+def get_xml_soccer():
+    from xml.etree import ElementTree
+
+    server = "openapi.gg.go.kr"
+    foot_conn = http.client.HTTPSConnection(server)
+    foot_conn.request(
+            "GET",
+            "/PublicTrainingFacilitySoccer?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
+    foot_res = foot_conn.getresponse()
+
+    if int(foot_res.status) == 200:
+        foot_strXml = foot_res.read().decode('utf-8')
+    else:
+        print('HTTP request failed : ', foot_res.reason)
+            
+    foot_parseData = ElementTree.fromstring(foot_strXml)
+    foot_elements = foot_parseData.iter('row')
+
+    return foot_elements        
+
 # 수영장 xml
 def get_xml_swim():
     from xml.etree import ElementTree
@@ -138,7 +182,6 @@ def get_xml_swim():
     swim_res = swim_conn.getresponse()
 
     if int(swim_res.status) == 200:
-    #print("수영장 읽어 오는데 성공")
         swim_strXml = swim_res.read().decode('utf-8')
     else:
         print('HTTP request failed : ', swim_res.reason)
@@ -147,6 +190,30 @@ def get_xml_swim():
     swim_elements = swim_parseData.iter('row')
 
     return swim_elements
+
+# 실내 스포츠 xml
+def get_xml_inside():
+    from xml.etree import ElementTree
+
+    server = "openapi.gg.go.kr"
+
+    inside_conn = http.client.HTTPSConnection(server)
+    inside_conn.request(
+            "GET",
+            "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
+        )
+    inside_res = inside_conn.getresponse()
+
+    if int(inside_res.status) == 200:
+        inside_strXml = inside_res.read().decode('utf-8')
+    else:
+        print('HTTP request failed : ', inside_res.reason)
+            
+    inside_parseData = ElementTree.fromstring(inside_strXml)
+    inside_elements = inside_parseData.iter('row')
+
+    return inside_elements
+
 
 # 검색 버튼 상호작용 함수
 def onSearch(sports):
@@ -168,28 +235,6 @@ def onSearch(sports):
         pass
 # 검색 -> 스포츠
 def Searchsport(sport):
-    from xml.etree import ElementTree
-
-    server = "openapi.gg.go.kr"
-
-    basket_conn = http.client.HTTPSConnection(server)
-    basket_conn.request(
-            "GET",
-            "/PublicLivelihood?KEY=3cccb5986c79462dae3acd235fa8a54f"
-        )
-
-    foot_conn = http.client.HTTPSConnection(server)
-    foot_conn.request(
-            "GET",
-            "/PublicTrainingFacilitySoccer?KEY=3cccb5986c79462dae3acd235fa8a54f"
-        )
-    
-    inside_conn = http.client.HTTPSConnection(server)
-    inside_conn.request(
-            "GET",
-            "/PublicGameOfBallGymnasium?KEY=3cccb5986c79462dae3acd235fa8a54f"
-        )
-
     global stateinput
     global s_listbox
 
@@ -199,17 +244,7 @@ def Searchsport(sport):
     bs_num = 0
 
     if(sport == "농구장" or sport == "선택안함"):
-        basket_res = basket_conn.getresponse()
-
-        if int(basket_res.status) == 200:
-            #print("농구장 읽어 오는데 성공")
-            basket_strXml = basket_res.read().decode('utf-8')
-        else:
-            print('HTTP request failed : ', basket_res.reason)
-
-        basket_parseData = ElementTree.fromstring(basket_strXml)
-        basket_elements = basket_parseData.iter('row')
-
+        basket_elements = get_xml_basket()
         for item in basket_elements: # " row“ element들
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
@@ -226,17 +261,7 @@ def Searchsport(sport):
     ft_num = 0
 
     if(sport == "축구장" or sport == "선택안함"):
-        foot_res = foot_conn.getresponse()
-
-        if int(foot_res.status) == 200:
-            #print("축구장 읽어 오는데 성공")
-            foot_strXml = foot_res.read().decode('utf-8')
-        else:
-            print('HTTP request failed : ', foot_res.reason)
-            
-        foot_parseData = ElementTree.fromstring(foot_strXml)
-        foot_elements = foot_parseData.iter('row')
-
+        foot_elements = get_xml_soccer()
         for item in foot_elements: # " row“ element들
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
@@ -255,7 +280,7 @@ def Searchsport(sport):
 
     if(sport == "수영장" or sport == "선택안함"):
         swim_elements = get_xml_swim()
-        
+
         for item in swim_elements: # " row“ element들
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
@@ -273,17 +298,7 @@ def Searchsport(sport):
     ins_num = 0
 
     if(sport == "실내스포츠(배드민턴, 탁구)" or sport == "선택안함"):
-        inside_res = inside_conn.getresponse()
-
-        if int(inside_res.status) == 200:
-            #print("실내스포츠 읽어 오는데 성공")
-            inside_strXml = inside_res.read().decode('utf-8')
-        else:
-            print('HTTP request failed : ', inside_res.reason)
-            
-        inside_parseData = ElementTree.fromstring(inside_strXml)
-        inside_elements = inside_parseData.iter('row')
-
+        inside_elements = get_xml_inside()
         for item in inside_elements: # " row“ element들
             part_el = item.find('SIGUN_NM')
             if stateinput.get() not in part_el.text:
