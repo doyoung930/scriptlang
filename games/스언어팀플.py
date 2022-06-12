@@ -103,6 +103,7 @@ def program_gui():
     # info_Text.config(wrap = 'c', font = state_font)
     # info_Text.config(width = 35, height = 21)
     # info_Text.place(x = 320, y = 80)
+    # 캔버스 그리기
    
     # 메일 버튼
     
