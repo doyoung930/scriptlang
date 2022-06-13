@@ -99,7 +99,7 @@ def program_gui():
    
     # 메일 버튼
     
-    global mail_photo
+    global mail_photo, mail_button
     mail_photo = PhotoImage(file="icon/메일아이콘3.png")
     mail_button = Button( root, image = mail_photo, height = 80, width = 75, bg="white", command=partial(Send_email))
     mail_button.place( x = 500, y= 500)
@@ -544,6 +544,7 @@ def sports_map():
 def Send_email():
     global mail
     global mailinput
+    global mail_button, mail_photo
     mail = tkinter.Toplevel()
     mail.geometry ("350x100+650+400")
     mail.title("메일")
@@ -564,6 +565,9 @@ def Send_email():
     SearchButton = Button(mail, font = s_mail_font, text="전송", command=partial(sendMail) )
     SearchButton.pack()
 
+    mail_photo = PhotoImage(file="메일아이콘4.png")
+    mail_button.config(image=mail_photo)
+
 
 
 # 이메일 보내기
@@ -575,6 +579,7 @@ def sendMail():
     global mailinput
     global mail
     global info_listbox
+    global mail_button, mail_photo
     
     senderAddr = "doyoung930@gmail.com"
     recipientAddr = mailinput.get()
@@ -616,6 +621,9 @@ def sendMail():
     s.close()
     mail.destroy()
     messagebox.showinfo("메일", "메일이 성공적으로 보내졌습니다.")
+
+    mail_photo = PhotoImage(file="메일아이콘3.png")
+    mail_button.config(image=mail_photo)
 
 ##############
 def main():
