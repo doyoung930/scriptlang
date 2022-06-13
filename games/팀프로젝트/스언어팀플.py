@@ -552,7 +552,7 @@ def sports_map():
         marker_1.set_text(building)
         map_widget.set_zoom(15)
     else:
-        pass
+        messagebox.showerror("오류", "도로명 주소가 기입되지 않아 지도를 표시할 수 없습니다")
 
 
 
