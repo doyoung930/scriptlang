@@ -71,13 +71,7 @@ def program_gui():
     SearchButton = Button(font = state_font, text="검색", command=partial(onSearch, sportscombo))
     SearchButton.place(x= 540, y = 45)
 
-    # # 스포츠 리스트 프레임
-    # global s_frame
-    # s_frame = Frame(root, borderwidth=12)
-    # s_frame.config(width=38, height=20)
-    # s_frame.place(x=20, y=80)
-
-        # 스포츠 센터 리스트 박스
+    # 스포츠 센터 리스트 박스
     global s_listbox
     s_frame = Frame(root)
     s_frame.place(x = 20, y = 80)
@@ -99,12 +93,6 @@ def program_gui():
     info_listbox.config(font = state_font, activestyle='none', selectmode = BROWSE)
     info_listbox.config(width = 35, height = 20)
     info_listbox.place(x = 320 , y = 80)
-
-    # global info_Text
-    # info_Text = Text(root,borderwidth=12, relief='ridge')
-    # info_Text.config(wrap = 'c', font = state_font)
-    # info_Text.config(width = 35, height = 21)
-    # info_Text.place(x = 320, y = 80)
 
     # 캔버스 그리기
     drawCanvas()
@@ -542,10 +530,6 @@ def sports_map():
         
         map_widget =  tkintermapview.TkinterMapView(location, width=800, height=500, corner_radius=0)
         map_widget.pack()
-        #map_widget.set_position(float(lat), float(logt))
-        # marker_1 = map_widget.set_address("경기도 시흥시 산기대학로 237", marker=True)
-        # print(marker_1.position, marker_1.text)# get position and text
-        # marker_1.set_text("한국공학대학교") # set new text
         marker_1 = map_widget.set_address(_text7 , marker=True)
     
         print(marker_1.position, marker_1.text)
@@ -584,6 +568,7 @@ def Send_email():
 
 # 이메일 보내기
 def sendMail():
+    import smtplib
     global senderAddr
     global recipientAddr
     global msg 
@@ -594,14 +579,33 @@ def sendMail():
     senderAddr = "doyoung930@gmail.com"
     recipientAddr = mailinput.get()
 
-    body =info_listbox.get(0)+"\n"+ info_listbox.get(1) +"\n" + info_listbox.get(2)+"\n" + info_listbox.get(3)+"\n" + info_listbox.get(4)+"\n"+ info_listbox.get(5)+"\n"+ info_listbox.get(6)
-    msg = MIMEText(body)
+    #content =info_listbox.get(0)+"\n"+ info_listbox.get(1) +"\n" + info_listbox.get(2)+"\n" + info_listbox.get(3)+"\n" + info_listbox.get(4)+"\n"+ info_listbox.get(5)+"\n"+ info_listbox.get(6)
+    
+    msg = MIMEMultipart('alternative')
     msg['Subject'] = "체육시설 정보"
     msg['From'] = senderAddr
     msg['To'] = recipientAddr
+    content = """
+        <html>
+        <header></header>
+        <body>
+        <b></b><br>
+        <img  src="https://postfiles.pstatic.net/MjAyMjA2MTJfNDgg/MDAxNjU1MDQwNDY2MDY3.vK6wUWTlNQOScRIa_rGt1Tqkn6yEyYYzoUYAiiqfuBIg.6XnXnQjmUSvEcN4Xrl56OTA65lzH3YTbO-PMII1kulcg.PNG.doyoung908/%EC%A0%9C%EB%AA%A9_%EC%97%86%EC%9D%8C.png?type=w966"/>
+        <p>
+            {title}
+        </p>
+        </body>
+        </html>
+    """.format(
+    title = info_listbox.get(0)+" / "+ info_listbox.get(1) +" / " + info_listbox.get(2)+" / " + info_listbox.get(3)+" / " + info_listbox.get(4)+" / "+ info_listbox.get(5)+" / "+ info_listbox.get(6)
+    )
+    htmlFD = open("logo.html", 'rb')
+    HtmlPart = MIMEText(content,'html', _charset = 'UTF-8' )
+    htmlFD.close()
+    msg.attach(HtmlPart)
 
 
-    import smtplib # 파이썬의 SMTP 모듈
+     # 파이썬의 SMTP 모듈
 # 메일 서버와 connect하고 통신 시작
     s = smtplib.SMTP("smtp.gmail.com", 587) 
 # SMTP 서버와 연결
