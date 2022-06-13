@@ -604,9 +604,9 @@ def sendMail():
     """.format(
     title = info_listbox.get(0)+" / "+ info_listbox.get(1) +" / " + info_listbox.get(2)+" / " + info_listbox.get(3)+" / " + info_listbox.get(4)+" / "+ info_listbox.get(5)+" / "+ info_listbox.get(6)
     )
-    htmlFD = open("logo.html", 'rb')
+
     HtmlPart = MIMEText(content,'html', _charset = 'UTF-8' )
-    htmlFD.close()
+
     msg.attach(HtmlPart)
 
 
