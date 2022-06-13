@@ -565,7 +565,7 @@ def Send_email():
     SearchButton = Button(mail, font = s_mail_font, text="전송", command=partial(sendMail) )
     SearchButton.pack()
 
-    mail_photo = PhotoImage(file="메일아이콘4.png")
+    mail_photo = PhotoImage(file="icon/메일아이콘4.png")
     mail_button.config(image=mail_photo)
 
 
@@ -622,7 +622,7 @@ def sendMail():
     mail.destroy()
     messagebox.showinfo("메일", "메일이 성공적으로 보내졌습니다.")
 
-    mail_photo = PhotoImage(file="메일아이콘3.png")
+    mail_photo = PhotoImage(file="icon/메일아이콘3.png")
     mail_button.config(image=mail_photo)
 
 ##############
