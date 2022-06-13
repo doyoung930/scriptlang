@@ -531,25 +531,28 @@ def sports_map():
  
     print(_text7)
 
-
-    location = tkinter.Toplevel()
-    location.geometry ("500x600+550+100")
-    location.title("지도")
-    location.resizable(False, False )
-    location_font = tkinter.font.Font(family = "나눔 고딕" , size = 15)
-    location_text= tkinter.Label(location, text = "[지도]", font = location_font)
-    location_text.pack()
+    if _text7 != "":
+        location = tkinter.Toplevel()
+        location.geometry ("500x600+550+100")
+        location.title("지도")
+        location.resizable(False, False )
+        location_font = tkinter.font.Font(family = "나눔 고딕" , size = 15)
+        location_text= tkinter.Label(location, text = "[지도]", font = location_font)
+        location_text.pack()
+        
+        map_widget =  tkintermapview.TkinterMapView(location, width=800, height=500, corner_radius=0)
+        map_widget.pack()
+        #map_widget.set_position(float(lat), float(logt))
+        # marker_1 = map_widget.set_address("경기도 시흥시 산기대학로 237", marker=True)
+        # print(marker_1.position, marker_1.text)# get position and text
+        # marker_1.set_text("한국공학대학교") # set new text
+        marker_1 = map_widget.set_address(_text7 , marker=True)
     
-    map_widget =  tkintermapview.TkinterMapView(location, width=800, height=500, corner_radius=0)
-    map_widget.pack()
-    #map_widget.set_position(float(lat), float(logt))
-    # marker_1 = map_widget.set_address("경기도 시흥시 산기대학로 237", marker=True)
-    # print(marker_1.position, marker_1.text)# get position and text
-    # marker_1.set_text("한국공학대학교") # set new text
-    marker_1 = map_widget.set_address(_text7 , marker=True)
-    print(marker_1.position, marker_1.text)
-    marker_1.set_text(building)
-    map_widget.set_zoom(15)
+        print(marker_1.position, marker_1.text)
+        marker_1.set_text(building)
+        map_widget.set_zoom(15)
+    else:
+        pass
 
 
 
