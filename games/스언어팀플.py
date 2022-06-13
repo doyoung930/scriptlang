@@ -111,13 +111,15 @@ def program_gui():
    
     # 메일 버튼
     
-    #mail_image = PhotoImage(file = "C:/Users/doyou/OneDrive/문서/GitHub/scriptlang/games/mailicon2.png")
-    mail_button = Button( root, text = "메일로 전송", height = 5, width = 10, command=partial(Send_email))
-    #mail_button = Button( root, image = mail_image, command=partial(Send_email))
+    global mail_photo
+    mail_photo = PhotoImage(file="icon/메일아이콘3.png")
+    mail_button = Button( root, image = mail_photo, height = 80, width = 75, bg="white", command=partial(Send_email))
     mail_button.place( x = 500, y= 500)
 
     # 지도 버튼
-    map_button = Button( root, text = "지도로 이동", height = 5, width = 10, command=partial(sports_map))
+    global map_photo
+    map_photo = PhotoImage(file="icon/지도아이콘4.png")
+    map_button = Button( root, image= map_photo, height = 80, width = 75, bg="white", command=partial(sports_map))
     map_button.place( x = 500, y= 400) 
 
 
