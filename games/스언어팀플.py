@@ -181,7 +181,7 @@ def event_for_listbox(event):
                     _text4 = "연락처 : " + getStr(item.find('CONTCT_NO').text)
                     _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
                     _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
-                    _text7 = getStr(item.find('REFINE_LOTNO_ADDR').text)
+                    _text7 = getStr(item.find('REFINE_ROADNM_ADDR').text)
                     logt = getStr(item.find('REFINE_WGS84_LOGT').text)
                     lat = getStr(item.find('REFINE_WGS84_LAT').text)
                     building = getStr(item.find('FACLT_NM').text)
@@ -198,7 +198,7 @@ def event_for_listbox(event):
                         _text4 = "연락처 : " + getStr(item.find('CONTCT_NO').text)
                         _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
                         _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
-                        _text7 = getStr(item.find('REFINE_LOTNO_ADDR').text)
+                        _text7 = getStr(item.find('REFINE_ROADNM_ADDR').text)
                         logt = getStr(item.find('REFINE_WGS84_LOGT').text)
                         lat = getStr(item.find('REFINE_WGS84_LAT').text)
                         building = getStr(item.find('FACLT_NM').text)
@@ -215,7 +215,7 @@ def event_for_listbox(event):
                         _text4 = "연락처 : " + getStr(item.find('CONTCT_NO').text)
                         _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
                         _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
-                        _text7 = getStr(item.find('REFINE_LOTNO_ADDR').text)
+                        _text7 = getStr(item.find('REFINE_ROADNM_ADDR').text)
                         logt = getStr(item.find('REFINE_WGS84_LOGT').text)
                         lat = getStr(item.find('REFINE_WGS84_LAT').text)
                         building = getStr(item.find('FACLT_NM').text)
@@ -232,7 +232,7 @@ def event_for_listbox(event):
                         _text4 = "연락처 : " + getStr(item.find('CONTCT_NO').text)
                         _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
                         _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
-                        _text7 = getStr(item.find('REFINE_LOTNO_ADDR').text)
+                        _text7 = getStr(item.find('REFINE_ROADNM_ADDR').text)
                         logt = getStr(item.find('REFINE_WGS84_LOGT').text)
                         lat = getStr(item.find('REFINE_WGS84_LAT').text)
                         building = getStr(item.find('FACLT_NM').text)
