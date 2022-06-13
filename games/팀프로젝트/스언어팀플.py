@@ -127,8 +127,8 @@ def program_gui():
 def event_for_listbox(event):
     global _text1
     global _text7
-    global logt
-    global lat
+
+
     global building
 
     global info_listbox
@@ -163,8 +163,7 @@ def event_for_listbox(event):
                     _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
                     _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
                     _text7 = getStr(item.find('REFINE_ROADNM_ADDR').text)
-                    logt = getStr(item.find('REFINE_WGS84_LOGT').text)
-                    lat = getStr(item.find('REFINE_WGS84_LAT').text)
+                   
                     building = getStr(item.find('FACLT_NM').text)
                     break
         
@@ -182,8 +181,8 @@ def event_for_listbox(event):
                     _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
                     _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
                     _text7 = getStr(item.find('REFINE_ROADNM_ADDR').text)
-                    logt = getStr(item.find('REFINE_WGS84_LOGT').text)
-                    lat = getStr(item.find('REFINE_WGS84_LAT').text)
+
+
                     building = getStr(item.find('FACLT_NM').text)
                     break
             if(not find_in_dontselect):
@@ -199,8 +198,8 @@ def event_for_listbox(event):
                         _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
                         _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
                         _text7 = getStr(item.find('REFINE_ROADNM_ADDR').text)
-                        logt = getStr(item.find('REFINE_WGS84_LOGT').text)
-                        lat = getStr(item.find('REFINE_WGS84_LAT').text)
+
+
                         building = getStr(item.find('FACLT_NM').text)
                         break
             if(not find_in_dontselect):
@@ -216,8 +215,8 @@ def event_for_listbox(event):
                         _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
                         _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
                         _text7 = getStr(item.find('REFINE_ROADNM_ADDR').text)
-                        logt = getStr(item.find('REFINE_WGS84_LOGT').text)
-                        lat = getStr(item.find('REFINE_WGS84_LAT').text)
+
+
                         building = getStr(item.find('FACLT_NM').text)
                         break
             if(not find_in_dontselect):
@@ -233,8 +232,8 @@ def event_for_listbox(event):
                         _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
                         _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
                         _text7 = getStr(item.find('REFINE_ROADNM_ADDR').text)
-                        logt = getStr(item.find('REFINE_WGS84_LOGT').text)
-                        lat = getStr(item.find('REFINE_WGS84_LAT').text)
+
+
                         building = getStr(item.find('FACLT_NM').text)
                         break
     
@@ -244,12 +243,12 @@ def event_for_listbox(event):
         info_listbox.insert(4, _text4)
         info_listbox.insert(5, _text5)
         info_listbox.insert(6, _text6)
-        info_listbox.insert(7, logt)
-        info_listbox.insert(7, lat)
+
+
         print(building)
         print(_text7)
-        print(logt)    
-        print(lat)
+
+
 
 # 농구장 xml
 def get_xml_basket():
@@ -525,14 +524,14 @@ def sports_map():
     global location
     global info_listbox
     global _text7
-    global logt
-    global lat
+
+
     global building
     
  
     print(_text7)
-    print(logt)
-    print(lat)
+
+
     location = tkinter.Toplevel()
     location.geometry ("500x600+550+100")
     location.title("지도")
@@ -543,8 +542,7 @@ def sports_map():
     
     map_widget =  tkintermapview.TkinterMapView(location, width=800, height=500, corner_radius=0)
     map_widget.pack()
-    map_widget.set_position(float(lat), float(logt))
-
+    #map_widget.set_position(float(lat), float(logt))
     # marker_1 = map_widget.set_address("경기도 시흥시 산기대학로 237", marker=True)
     # print(marker_1.position, marker_1.text)# get position and text
     # marker_1.set_text("한국공학대학교") # set new text
