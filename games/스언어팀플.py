@@ -123,6 +123,12 @@ def program_gui():
 
 # #리스트 박스 이벤트
 def event_for_listbox(event):
+    global _text1
+    global _text7
+    global logt
+    global lat
+    global building
+
     global info_listbox
     info_listbox.delete(0,info_listbox.size())
     selection = event.widget.curselection()
@@ -154,6 +160,10 @@ def event_for_listbox(event):
                     _text4 = "연락처 : " + getStr(item.find('CONTCT_NO').text)
                     _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
                     _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
+                    _text7 = getStr(item.find('REFINE_LOTNO_ADDR').text)
+                    logt = getStr(item.find('REFINE_WGS84_LOGT').text)
+                    lat = getStr(item.find('REFINE_WGS84_LAT').text)
+                    building = getStr(item.find('FACLT_NM').text)
                     break
         
         # 선택 안 했다면 모든 xml에서 다 찾아
@@ -169,6 +179,10 @@ def event_for_listbox(event):
                     _text4 = "연락처 : " + getStr(item.find('CONTCT_NO').text)
                     _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
                     _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
+                    _text7 = getStr(item.find('REFINE_LOTNO_ADDR').text)
+                    logt = getStr(item.find('REFINE_WGS84_LOGT').text)
+                    lat = getStr(item.find('REFINE_WGS84_LAT').text)
+                    building = getStr(item.find('FACLT_NM').text)
                     break
             if(not find_in_dontselect):
                 elements = get_xml_soccer()
@@ -182,6 +196,10 @@ def event_for_listbox(event):
                         _text4 = "연락처 : " + getStr(item.find('CONTCT_NO').text)
                         _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
                         _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
+                        _text7 = getStr(item.find('REFINE_LOTNO_ADDR').text)
+                        logt = getStr(item.find('REFINE_WGS84_LOGT').text)
+                        lat = getStr(item.find('REFINE_WGS84_LAT').text)
+                        building = getStr(item.find('FACLT_NM').text)
                         break
             if(not find_in_dontselect):
                 elements = get_xml_swim()
@@ -195,6 +213,10 @@ def event_for_listbox(event):
                         _text4 = "연락처 : " + getStr(item.find('CONTCT_NO').text)
                         _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
                         _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
+                        _text7 = getStr(item.find('REFINE_LOTNO_ADDR').text)
+                        logt = getStr(item.find('REFINE_WGS84_LOGT').text)
+                        lat = getStr(item.find('REFINE_WGS84_LAT').text)
+                        building = getStr(item.find('FACLT_NM').text)
                         break
             if(not find_in_dontselect):
                 elements = get_xml_inside()
@@ -208,6 +230,10 @@ def event_for_listbox(event):
                         _text4 = "연락처 : " + getStr(item.find('CONTCT_NO').text)
                         _text5 = "홈페이지 주소 : " + getStr(item.find('HMPG_ADDR').text)
                         _text6 = "면적(건축) : " + getStr(item.find('BUILD_AR').text) + "m^2"
+                        _text7 = getStr(item.find('REFINE_LOTNO_ADDR').text)
+                        logt = getStr(item.find('REFINE_WGS84_LOGT').text)
+                        lat = getStr(item.find('REFINE_WGS84_LAT').text)
+                        building = getStr(item.find('FACLT_NM').text)
                         break
     
         info_listbox.insert(1, _text1)
@@ -216,6 +242,12 @@ def event_for_listbox(event):
         info_listbox.insert(4, _text4)
         info_listbox.insert(5, _text5)
         info_listbox.insert(6, _text6)
+        info_listbox.insert(7, logt)
+        info_listbox.insert(7, lat)
+        print(building)
+        print(_text7)
+        print(logt)    
+        print(lat)
 
 # 농구장 xml
 def get_xml_basket():
@@ -489,18 +521,34 @@ def getStr(s):
 #지도로 이동
 def sports_map():
     global location
+    global info_listbox
+    global _text7
+    global logt
+    global lat
+    global building
+    
+ 
+    print(_text7)
+    print(logt)
+    print(lat)
     location = tkinter.Toplevel()
     location.geometry ("500x600+550+100")
     location.title("지도")
     location.resizable(False, False )
     location_font = tkinter.font.Font(family = "나눔 고딕" , size = 15)
-    
     location_text= tkinter.Label(location, text = "[지도]", font = location_font)
     location_text.pack()
-    map_widget = tkintermapview.TkinterMapView(location, width=800, height=500, corner_radius=0)
+    
+    map_widget =  tkintermapview.TkinterMapView(location, width=800, height=500, corner_radius=0)
     map_widget.pack()
-    map_widget.set_position(37.012603584211, 127.32631686988)
-    map_widget.set_address("경기 안성시 보개면 종합운동장로 162", marker=True)
+    map_widget.set_position(float(lat), float(logt))
+
+    # marker_1 = map_widget.set_address("경기도 시흥시 산기대학로 237", marker=True)
+    # print(marker_1.position, marker_1.text)# get position and text
+    # marker_1.set_text("한국공학대학교") # set new text
+    marker_1 = map_widget.set_address(_text7 , marker=True)
+    print(marker_1.position, marker_1.text)
+    marker_1.set_text(building)
     map_widget.set_zoom(15)
 
 
@@ -561,17 +609,6 @@ def sendMail():
     s.close()
     mail.destroy()
     messagebox.showinfo("메일", "메일이 성공적으로 보내졌습니다.")
-    
-
-
-
-
-
-
-
-
-
-
 
 ##############
 def main():
