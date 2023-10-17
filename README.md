@@ -42,9 +42,9 @@ https://openapi.gg.go.kr/PublicGameOfBallGymnasium
 메일과 연동 및 메일 전송기능
 
  # 이미지 
-<img src="https://github.com/doyoung930/scriptlang/assets/70666642/204aa55a-22c8-4769-aeca-8818772b31b5  width="200" height="400"/>
-<img src="https://github.com/doyoung930/scriptlang/assets/70666642/94ac8fba-67f4-49f6-9500-1f059c1865d6  width="200" height="400"/>
-<img src="https://github.com/doyoung930/scriptlang/assets/70666642/263343a9-9b39-441c-bc49-26169a13e96a  width="200" height="400"/>
+<img src="https://github.com/doyoung930/scriptlang/assets/70666642/204aa55a-22c8-4769-aeca-8818772b31b5"  width="200" height="400"/>
+<img src="https://github.com/doyoung930/scriptlang/assets/70666642/94ac8fba-67f4-49f6-9500-1f059c1865d6"  width="200" height="400"/>
+<img src="https://github.com/doyoung930/scriptlang/assets/70666642/263343a9-9b39-441c-bc49-26169a13e96a"  width="200" height="400"/>
 
 
 
